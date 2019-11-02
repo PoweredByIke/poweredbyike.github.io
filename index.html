@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>The job impacts of automated trucks</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+
+
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="./content.js"></script>
+
+</head>
+<body>
+
+
+<style>
+
+    body, html {
+        height:100%;
+        margin:0;
+        padding:0;
+        background: #c8d2da;
+        overflow:hidden;
+        font-family: 'Source Sans Pro', sans-serif;
+    }
+
+    #map {
+        position: fixed;
+        width:60%;
+        top:0; 
+        bottom:0;
+    }
+
+    #map:before {
+        content: '<Journey graphics here>';
+        position:absolute;
+        padding:30px;
+        color:white;
+        font-size: 4vw;
+        margin-top:40%;
+        z-index: -99
+    }
+    .mapboxgl-map {
+        font:inherit;
+    }
+    canvas {
+        transition: opacity 1s;
+        background: #c8d2da;
+    }
+
+    #journeyGraphics, #chart {
+        width:100%;
+        height:100%;
+        z-index:99;
+        opacity:0;
+        position:absolute;
+        pointer-events:none;
+        transition: opacity 0.5s;
+        background: rgba(255,255,255,0.75);
+    } 
+
+    /*graph styling*/
+    
+    #actualChart {
+        opacity:0;
+    }
+    #chart svg,
+    .barSpace {
+        width:60%;
+        height:60%;
+        margin:10% 20%;
+        position:absolute;
+    }
+
+    .axis {
+        stroke:#999;
+        stroke-width:0.5vw;
+        stroke-dashoffset: 5000;
+        stroke-dasharray: 5000;
+        transition: stroke-dashoffset 3s;
+    }
+
+    .year {
+        width: 9vw;
+        height: 60vh;
+        display: inline-block;
+        outline:1px solid purple;
+    }
+
+    .bar {
+        position:absolute;
+        display:inline-block;
+        background:purple;
+        float:left;
+        transform-origin:bottom center;
+    }
+
+    .axisLabel {
+        transform: translateX(-50%) rotate(-90deg);
+        width: 60vh;
+        margin-left:-2vw;
+        font-size:1.5vw;
+        color:#999;
+    }
+
+    .label {
+        top:65vh;
+        font-size:1vw;
+        position:absolute;
+        width:20%;
+        display: inline-block;
+        text-align: center;
+        color:#999;
+        opacity:0;
+        transition: opacity 1s;
+    }
+
+    #journeyGraphics img {
+        object-fit: cover;
+        width:100%;
+        height:100%;
+        position: absolute;
+        opacity:0;
+        transition:opacity 0.5s;
+    }
+
+    #sidebar {
+        width: 40%;
+        left: 60%;
+        overflow-y: scroll;
+        font-size:calc(1.5vh + 1vw);
+        position:relative;
+        height: 100%;
+    }
+
+    #content {
+        background-color: #fafafa;
+        color: #666;
+        height:100%;
+        width:40%;
+        position:fixed;
+    }
+
+    .nav {
+        position: fixed;
+        top: 3vh;
+        width: 40%;
+        font-size:0.5em;
+        text-transform:uppercase;
+        opacity:0.5;
+        cursor:pointer;
+    }
+
+    .nav div {
+        display:inline-block;
+        width:33%;
+        text-align: center;
+    }
+
+    #container {
+        padding:10%;
+    }
+
+    #container span {
+        display:block;
+        font-size:0.8em;
+    }
+
+    .driverMug {
+        float: right;
+        width: 25%;
+        border-radius: 50%;
+        border:1px solid #ddd;
+    }
+
+    #drawer {
+        /*position:absolute;*/
+        height:100%;
+    }
+    section {
+        /*margin: 0% 15%;*/
+        outline: 2px solid rgba(6,73,121,0.1);
+        height:100%;
+        width:100%;
+        position:relative;
+    }
+
+    section.active {
+        opacity: 1;
+    }
+    
+    section:last-child {
+        border-bottom: none;
+        margin-bottom: 200px;
+    }
+
+    p {
+        transition: opacity 1s;
+    }
+
+    #chevron {
+        z-index:99;
+        position:fixed;
+        bottom:0;
+        text-align: center;
+        width: 40%;
+    }
+
+    #chevron:after {
+        content:'⌄';
+        font-size:3em;
+    }
+
+    @media (max-width:600px) {
+
+        .nav {
+            display:none;
+        }
+
+        .axis {
+            stroke-width:1vw;
+        }
+        
+        .axisLabel {
+            width:40vh;
+            font-size:5vw;
+            margin-left:-3vw;
+        }
+        #map {
+            width:100%;
+            bottom:40%;
+        }
+
+        #sidebar {
+            width:100%;
+            bottom:0;
+            top:60%;
+            position:absolute;
+            left:0;
+            font-size: 3vh;
+        }
+
+        #content {
+            width: 100%;
+        }
+
+        #container {
+            padding:5%;
+        }
+    }
+</style>
+
+<div id='map'>
+    <div id='chart'></div>
+    <div id='journeyGraphics'></div>
+</div>
+<div id='sidebar'>
+    <div id='content'>
+        <div id='container'></div>
+        <div id='chevron'></div>
+    </div>
+    <div id='drawer'></div>
+</div>
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGV0ZXJxbGl1IiwiYSI6ImNqdHJqdG92OTBkNTg0M3BsNDY0d3NudWcifQ.0z4ov_viFE-yBMSijQpOhQ';
+
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/peterqliu/ck2gsk41605p71coi7wf6dope',
+        scrollZoom: false,
+        // dragPan: false
+    });
+
+
+</script>
+<script src='app.js'></script>
+</body>
+</html>
