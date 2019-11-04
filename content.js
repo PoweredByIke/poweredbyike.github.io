@@ -192,8 +192,11 @@ var tasks = [
 
 		do: function(progress, entering){
 
-			if (entering) vis.setExplainer(1)
-			
+			if (entering) {
+				vis.setExplainer(1)
+				d3.select('#chartTitle')
+					.text('Effects of Automation')
+			}
 		}
 	},
 	{
