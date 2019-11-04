@@ -58,7 +58,7 @@ var tasks = [
 			if (entering) {
 				vis.setOverlay('us');
 				map.fitBounds(bounds.us, {duration:3000})
-				map.easeTo({zoom:4})
+				// map.easeTo({zoom:4})
 
 			}
 		}
@@ -85,9 +85,9 @@ var tasks = [
 			
 			if (secondStage) {
 				vis.setJourneyGraphic(1)
-				vis.setSectionOpacity('#journeyGraphics')
+				vis.toggle('mainSections', '#journeyGraphics')
 			}
-			else vis.setSectionOpacity('canvas')
+			else vis.toggle('mainSections', '')
 
 			d3.select('#container .p1')
 				.style('opacity', () => {return secondStage ? 1 : 0})
@@ -141,6 +141,11 @@ var tasks = [
 		],
 
 		do: function(progress, entering){
+			
+			if (entering) {
+				vis.toggle('mainSections', '#journeyGraphics')
+				vis.setJourneyGraphic(5)
+			}
 		}
 	},
 
@@ -149,7 +154,7 @@ var tasks = [
 		do: function(progress, entering){
 			if (entering) {
 
-				vis.setSectionOpacity('canvas')
+				vis.toggle('mainSections', '')
 
 				vis.setOverlay('none');
 
@@ -167,11 +172,14 @@ var tasks = [
 		do: function(progress, entering){
 
 			if (entering) {
-				console.log('ENTER')
-				vis.setSectionOpacity('#chart');
+				vis.toggle('mainSections', '#chart');
+				vis.toggle('chart', '#explainer .bar')
 
 				d3.selectAll('.axis')
 					.style('stroke-dashoffset', 0)
+
+				vis.setExplainer(0)
+
 			}
 
 
@@ -184,14 +192,7 @@ var tasks = [
 
 		do: function(progress, entering){
 
-			d3.select('#bar0')
-				.style('transform', `scaleX(1) scaleY(${progress})`)
-
-			if (entering) {
-				d3.select('#label0')
-					.style('opacity', 1)
-			}
-
+			if (entering) vis.setExplainer(1)
 			
 		}
 	},
@@ -204,15 +205,7 @@ var tasks = [
 
 		do: function(progress, entering){
 
-			d3.select('#bar1')
-				.style('transform', `scaleY(${progress})`)
-
-			d3.select('#bar3')
-				.style('transform', `translate(-9vw, 12vh) scaleY(${progress})`)
-				if (entering) {
-					d3.selectAll('#label1')
-						.style('opacity', 1)
-				}			
+				if (entering) vis.setExplainer(2)		
 
 		}
 	},
@@ -220,26 +213,24 @@ var tasks = [
 		"text":[
 			"But, because automated trucks need partners to move loads to and from the highway, there are new short haul jobs created from this model, which partially offset the loss in baseline jobs."
 		],
-		do: function(progress, entering){
+		do: function(progress, entering, rewinding){
 
 
-			d3.select('#bar3')
-					.style('transform', `translate(${vis.styleWithScroll(9, progress, 0.2)-9}vw, 12vh) scaleY(1)`)
-			
-			if (progress > 0.2) {
-				d3.select('#bar2')
-					.style('transform', `scaleX(1) scaleY(${vis.styleWithScroll(1, progress-0.2, 0.8)})`)
-				d3.select('#bar3')
-					.style('transform', `translate(0vw, ${12 - vis.styleWithScroll(12, progress-0.2, 0.8)}vh) scaleY(1)`)
-
-			}
 			if (entering) {
 
+				if (rewinding) {
+					vis.setExplainer(4);
+					vis.toggle('chart', '#explainer .bar')
+				}
+				else vis.setExplainer(3)
 
-				d3.selectAll('#label2, #label3')
-					.style('opacity', 1)
+				d3.select('#chartTitle')
+					.text('Effects of Automation')
 			}				
 
+			else if (progress>0.5 && state.slideProgress < 0.5) {
+				vis.setExplainer(4)
+			}
 
 		}
 	},
@@ -247,51 +238,65 @@ var tasks = [
 		"text":[
 			"Here’s what the model tells us could happen over time as we step through the four regions.",
 			"Automated trucks may begin operating first on highways in Texas, handing off to local drivers.",
-			"<texas stats, pending final numbers>"
+			"Early on, we expect automated trucks to have uptime similar to today’s vehicles, and a cost profile that’s not much different. Still, small improvements can still generate new demand for freight. In our model, this actually creates new jobs in Texas in the first few years. "
 		],
+		textSize: '0.75em',
 		do: function(progress, entering){
 
 
 			if (entering) {
 				vis.setOverlay('texas')
 				map
-				.fitBounds(bounds.texas, {duration:3000})
-				// .setPaintProperty('chart', 'fill-extrusion-opacity', 0)
-				// .setPaintProperty('chart_labels', 'text-opacity', 0)
+				.fitBounds(bounds.texas, {duration:1000})
+				vis.toggle('labelSet', '#types')
+				vis.toggle('chart', '#actualChart')
+				vis.setChart(1, true)
+				d3.select('#actualChart')
+					.classed('exploded',true)
 
 			}
 		}
 	},
 	{
 		"text":[
-			"<southwest stats, pending final numbers>"
+			"By mid-decade, we assume automated trucks operate across the southwest United States, and in California. The good weather and high freight density are a good match, and the utilization of automated vehicles begins to improve productivity."
 		],
+		textSize: '0.75em',
 		do: function(progress, entering){
 			if (entering) {
 				vis.setOverlay('southwest')
-				map.fitBounds(bounds.southwest, {duration:3000})
+				map.fitBounds(bounds.southwest, {duration:1000});
+
+				vis.toggle('labelSet', '#years')
+				d3.select('.exploded')
+					.classed('exploded',false)
+				vis.setChart(2)
 			}
 		}
 	},
 	{
 		"text":[
-			"<south stats, pending final numbers>"
+			"Over the next two years, automated trucks spread east and begin making journeys across the entire continent. The winter weather to the north likely requires more development and testing."
 		],
 		do: function(progress, entering){
 			if (entering) {
 				vis.setOverlay('south')
-				map.fitBounds(bounds.south, {duration:3000})
+				map.fitBounds(bounds.south, {duration:1000})
+				vis.setChart(3)
 			}
 		}
 	},
 	{
 		"text":[
-			"<us stats, pending final numbers>"
+			"In ten years, we assume automated trucks operate across the entire country, and may begin working internationally. Utilization and cost savings reach maturity and drive big increases in freight volumes and short haul jobs."
 		],
 		do: function(progress, entering){
-				vis.setOverlay('us_blue')
-				map.fitBounds(bounds.us, {duration:3000})
-				if (entering) vis.setSectionOpacity('#chart')
+			vis.setOverlay('us_blue')
+			map.fitBounds(bounds.us, {duration:1000})
+			if (entering) {
+				vis.toggle('mainSections', '#chart')
+				vis.setChart(4)
+			}
 		}
 	},
 	{
@@ -307,7 +312,7 @@ var tasks = [
 			if (entering){
 				map.easeTo({pitch:0})
 				vis.setOverlay('us_blue')
-				vis.setSectionOpacity('canvas')
+				vis.toggle('mainSections', '')
 			}
 		}
 	},
@@ -378,9 +383,14 @@ var tasks = [
 ]
 
 var navLinks = [
-	{title: 'Intro', page: 1},
-	{title: 'Data', page: 9},
-	{title: 'Drivers', page: 18}
+	{title: 'Intro', page: 1, do: function(){
+		vis.toggle('mainSections', '')
+	}},
+	{title: 'Data', page: 9, do: function(){
+		vis.toggle('mainSections', '');
+		vis.toggle('labelSet', '#types')
+	}},
+	{title: 'Drivers', page: 18,do: function(){vis.toggle('mainSections', '')}}
 ]
 
 var drivers = {
@@ -444,10 +454,10 @@ var drivers = {
 
 
 var chartData = [
-	{data:[19293, 16688, 3307, 2988]},
-	{data:[89380, 70074, 14931, 18398]},
-	{data:[154630, 104530, 36351, 38553]},
-	{data:[516843, 307522, 136446, 136147]}
+	{data:[[19293], [16688, 3307, 2988]], area: 'Texas', year:2024},
+	{data:[[89380], [70074, 14931, 18398]], area: 'Southwest', year:2026},
+	{data:[[154630], [104530, 36351, 38553]], area: 'South', year:2028},
+	{data:[[516843], [307522, 136446, 136147]], area: 'Nationwide', year:2030}
 ];
 
 // var charts = {

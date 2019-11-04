@@ -57,21 +57,88 @@
         z-index:99;
         opacity:0;
         position:absolute;
-        pointer-events:none;
+        /*pointer-events:none;*/
         transition: opacity 0.5s;
         background: rgba(255,255,255,0.75);
     } 
 
     /*graph styling*/
     
+    #chartTitle {
+        text-align: center;
+        margin-top: 5%;
+        position: absolute;
+        width: 100%;
+        font-size:1.5vw;
+        color:#666;
+    }
+
+
     #actualChart {
         opacity:0;
+        transition: all 1s;
+        transform-origin: bottom left;
+        transform: scaleX(2.65);
     }
+
+    .year {
+        width: 20%;
+        margin-left: 5%;
+        height: 60vh;
+        display: inline-block;
+        /*outline:1px solid purple;*/
+        opacity: 0;
+        transform-origin: bottom;
+        transition:all 1s;
+    }
+
+ 
+    .year.expanded {
+        opacity:1;
+    }
+
+
+    .bar.actual {
+        margin-left:20%;
+        height:100%;
+        width:30%;
+        transition: all 1s;
+    }
+
+/*    styling specific to exploded texas view
+*/   
+
+
+    .exploded #year0 .actual {
+        transform:scaleY(1) translateX(10%);
+    }
+
+    .exploded .subBar {
+        transform: scaleX(1.25);
+    }
+    .exploded #year0 .shortHaul {
+        transform:translateX(160%) scaleX(1.25);
+    }
+
+    .exploded #year0 .automated {
+        transform:translateX(320%) scaleX(1.25);
+    }
+
+    .exploded .subBar {
+        /*transform:scaleX(0.8);*/
+    }
+    .chart {
+        transition: opacity 1s;
+    }
+
+
+
     #chart svg,
     .barSpace {
-        width:60%;
+        width:80%;
         height:60%;
-        margin:10% 20%;
+        top:10%;
+        left:10%;
         position:absolute;
     }
 
@@ -83,19 +150,52 @@
         transition: stroke-dashoffset 3s;
     }
 
-    .year {
-        width: 9vw;
-        height: 60vh;
-        display: inline-block;
-        outline:1px solid purple;
+    /*label styling*/
+    #captions{
+        top:70%;
+        position:absolute;
+        margin:1vw 10%;
+        width:80%;
+        height:30%;
+        /*outline:1px solid purple;*/
+    }
+
+    #years {
+        opacity:0;
+        transition: transform 1s;
+        transform-origin:left;
     }
 
     .bar {
         position:absolute;
         display:inline-block;
-        background:purple;
         float:left;
         transform-origin:bottom center;
+        transform: scaleY(0);
+        transition:transform 1s;
+    }
+
+
+    .subBar {
+        transition: transform 1s;
+    }
+
+    .without {
+        background:#B7C3CD;
+    }
+
+    .with {
+        background:#6F7C7C;
+    }
+
+
+    .shortHaul {
+        background:#E5A039;
+    }
+
+
+    .automated {
+        background:#054D7F;
     }
 
     .axisLabel {
@@ -107,24 +207,25 @@
     }
 
     .label {
-        top:65vh;
-        font-size:1vw;
+        font-size:1.5vw;
         position:absolute;
         width:20%;
         display: inline-block;
         text-align: center;
         color:#999;
         opacity:0;
-        transition: opacity 1s;
+        transition: all 1s;
     }
 
     #journeyGraphics img {
-        object-fit: cover;
         width:100%;
-        height:100%;
+        max-width:1000px;
         position: absolute;
         opacity:0;
         transition:opacity 0.5s;
+        max-width: 1000px;
+        transform: translateX(-50%);
+        left: 50%;
     }
 
     #sidebar {
@@ -180,6 +281,7 @@
         /*position:absolute;*/
         height:100%;
     }
+
     section {
         /*margin: 0% 15%;*/
         outline: 2px solid rgba(6,73,121,0.1);
@@ -212,6 +314,13 @@
     #chevron:after {
         content:'⌄';
         font-size:3em;
+        animation:pulse 2s infinite;
+        /*animation-duration: 5s;*/
+    }
+
+    @keyframes pulse {
+        0%   {opacity:0.25}
+        100%  {opacity:0.75}
     }
 
     @media (max-width:600px) {
@@ -254,8 +363,11 @@
 </style>
 
 <div id='map'>
-    <div id='chart'></div>
-    <div id='journeyGraphics'></div>
+    <div id='chart'>
+        <div id='chartTitle'>Effects of Automation</div>
+        <div id = 'captions'></div>
+    </div>
+    <div id='journeyGraphics' style='pointer-events: none; background:white'></div>
 </div>
 <div id='sidebar'>
     <div id='content'>

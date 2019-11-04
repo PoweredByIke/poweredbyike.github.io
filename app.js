@@ -1,7 +1,7 @@
 var state = {
 	scrollPosition:0,
 	currentSlide:0,
-	slideDelayFraction: -0.5
+	slideProgress: -0
 }
 
 var vis = {
@@ -64,8 +64,9 @@ var vis = {
 		for (candidate of sections) {
 			d3.select(candidate)
 				.style('opacity', ()=>{
-					var opaque = !targetReached || candidate === section;
-					targetReached = true;
+					var hit = candidate === section;
+					var opaque = !targetReached || hit;
+					if (hit) targetReached = true;
 					return opaque ? 1 : 0;
 				})
 		}
@@ -76,17 +77,173 @@ var vis = {
 		d3.selectAll('#journeyGraphics img')
 			.style('opacity', d=> d <= step ? 1 : 0)
 	},
+
 	styleWithScroll: function(maxValue, progress, maxProgress) {
 		return Math.min(progress/maxProgress, 1) * maxValue
 	},
 
+	toggleChartVisibility: function(chart){
+		var charts = ['#explainer .bar', '#actualChart'];
+
+		for (candidate of charts) {
+			d3.selectAll(candidate)
+				.style('opacity', candidate === chart ? 1 : 0)
+		}
+	},
+
+	//toggle between steps (years) in actual chart
+	setChart: function(step, exploded) {
+
+		// update title
+
+		d3.select('#chartTitle')
+			.text(d=> `${chartData[step-1].area} by ${chartData[step-1].year}`)
+
+		//update whole chart transform to fit on graph
+		d3.select('#actualChart')
+			.style('transform', `scaleX(${exploded ? 2.65 : 4/step})`);
+
+		// fade in/out appropriate year
+		d3.selectAll('.year')
+			.classed('expanded', (d,i)=>{
+				return i < step
+			})
+			.style('transform', (d,i)=>{
+				return `scaleY(${d.max/chartData[step-1].max}) ${exploded ? 'translateX(-35%)' : ''}`
+			})
+
+		if (step >=2) {
+
+			d3.select('#years')
+				.style('transform', `scale(${4/step})`)
+		}
+	},
+
+
+	//toggle between steps in explainer
+	setExplainer(step, rewinding){
+		
+
+		if (false) {
+			d3.select('#bar3')
+				.style('animation-name', 'slideAndPop')
+				.style('animation-duration', '2s')
+		}
+
+		else {
+
+			var blocking = this.chart.choreography[step];
+
+			d3.selectAll('#explainer .bar')
+				.style('transform', (d,i)=>{return blocking.bar[i].transform});
+
+			d3.selectAll('#types .label')
+				.style('opacity', (d,i)=>{return blocking.label[i].opacity})	
+				.style('transform', (d,i)=>{return blocking.label[i].transform});	
+
+		}		
+
+	},
+
+
+	toggle: function(type, targetToActivate) {
+		var candidates = this.toggles[type];
+
+		for (candidate of candidates) {
+			d3.selectAll(candidate)
+				.style('opacity', candidate === targetToActivate ? 1 : 0)
+		}
+	},
+	toggles: {
+		mainSections:['#journeyGraphics', '#chart'],
+		labelSet: ['#types', '#years'],
+		chart: ['#explainer .bar', '#actualChart'],
+	},
 	chart: {
+		barClasses: ['without', 'with', 'shortHaul', 'automated'],
 		barColors:['#B7C3CD', '#6F7C7C', '#E5A039', '#054D7F'],
 		barPadding:20,
-		project: {
-			xMargin: 20,
-			yMargin: 20
-		}
+		choreography: [
+			//starting
+			{
+				bar: [
+					{transform:''},
+					{transform:''},
+					{transform:''},
+					{transform:'translate(-12vw, 12vh) scaleY(0)'}
+				],
+				label: [
+					{opacity:0},
+					{opacity:0},
+					{opacity:0},
+					{opacity:0}
+				]
+			},
+
+			//first bar grows
+			{
+				bar: [
+					{transform:'scaleY(1)'},
+					{transform:''},
+					{transform:''},
+					{transform:'translate(-12vw, 12vh) scaleY(0)'}
+				],
+				label: [
+					{opacity:1},
+					{opacity:0},
+					{opacity:0},
+					{opacity:0, transform: 'translate(-12vw, 0vh)'}
+				]
+			},
+
+			//second and fourth bar grow, labels appear
+			{
+				bar: [
+					{transform:'scaleY(1)'},
+					{transform:'scaleY(1)'},
+					{transform:''},
+					{transform: 'translate(-12vw, 12vh) scaleY(1) '}
+				],
+				label: [
+					{opacity:1},
+					{opacity:1},
+					{opacity:0},
+					{opacity:1, transform: 'translate(-12vw, 0vh)'}
+				]
+			},
+
+			//fourth bar scoots over
+			{
+				bar: [
+					{transform:'scaleY(1)'},
+					{transform:'scaleY(1)'},
+					{transform:''},
+					{transform: 'translate(0vw, 12vh) scaleY(1) '}
+				],
+				label: [
+					{opacity:1},
+					{opacity:1},
+					{opacity:0},
+					{opacity:1, transform: ''}
+				]
+			},
+
+			//third bar grows, pushes fourth bar up
+			{
+				bar: [
+					{transform:'scaleY(1)'},
+					{transform:'scaleY(1)'},
+					{transform:'scaleY(1)'},
+					{transform: 'scaleY(1)'}
+				],
+				label: [
+					{opacity:1},
+					{opacity:1},
+					{opacity:1},
+					{opacity:1, transform: ''}
+				]
+			},
+		]
 	}
 }
 map.on('load', ()=>{
@@ -143,6 +300,8 @@ map.on('load', ()=>{
 		.on('click', (d)=>{
 			document.querySelector('#sidebar')
 				.scrollTo(0,innerHeight * d.page)
+				console.log(d)
+			d.do();
 		})
 
 	d3.select('#container')
@@ -225,63 +384,6 @@ var animation = {
 animation.buildFrames();
 
 
-function buildBarsGeoJSON(center, barWidth, barGap, properties) {
-
-	barGap = barWidth/1.5;
-
-	var centerLngs = [
-		center[0] - (barWidth + barGap) * 1.5,
-		center[0] - (barWidth + barGap) * 0.5,
-		center[0] + (barWidth + barGap) * 0.5,
-		center[0] + (barWidth + barGap) * 1.5,
-	]
-
-	var squareFormat = [
-		[-0.5, -0.5],
-		[-0.5, 0.5],
-		[0.5, 0.5],
-		[0.5, -0.5],
-		[-0.5, -0.5]		
-	]
-
-	var footprints = centerLngs.map((c,i) => {
-
-		var footprint = squareFormat.map((corner)=>{
-			return [corner[0]* barWidth + c, corner[1]* barWidth + center[1]]
-		})
-
-		footprint = {
-			type: 'Feature',
-			properties: properties[i],
-			geometry: {
-			type: 'Polygon',
-			coordinates:[footprint]
-			}
-		}
-		return footprint
-	})
-
-
-	//add labels
-
-	var labels = ['Jobs without automation', 'With automation', 'Automated trucks', 'New short-haul jobs'];
-
-	centerLngs.forEach((lng,i)=>{
-		var coord = [lng, center[1]-0.5*barWidth];
-
-		footprints.push({
-			type: 'Feature',
-			properties: {text: labels[i], id:i},
-			geometry: {
-			type: 'Point',
-			coordinates:coord
-			}
-		})
-	})
-	return {type: 'FeatureCollection', features: footprints}
-
-}
-
 
 function buildProfiles(name) {
 
@@ -316,12 +418,13 @@ function buildProfiles(name) {
 
 	vis.highlightDriver(drivers[name].layer)
 }
-function buildChart(data){
+
+function buildExplainer(data){
 
 
 	var chart = d3.select('#chart')
 		.append('div')
-		.attr('class','barSpace')
+		.attr('class','barSpace chart')
 		.attr('id', 'explainer')
 
 	chart
@@ -330,12 +433,131 @@ function buildChart(data){
 		.text('Jobs')
 
 
+	// bars
+
+	chart
+		.selectAll('.bar')
+		.data(data)
+		.enter()
+		.append('div')
+		.attr('class', (d,i)=>{return vis.chart.barClasses[i]+' bar'})
+		.style('transform', 'scaleY(0)')
+		.attr('id', (d,i)=>{return `bar${i}`})
+		.style('width', 80/data.length+'%')
+		.style('top', d=>100-d.max*100+'%')
+		.style('bottom', d=>d.min*100+'%')
+		.style('left', (d,i) => {
+			return i * 100/data.length+ vis.chart.barPadding/data.length+'%'
+		})
+		// .classed((d,i)=>{return vis.chart.barClasses[i]}, true)
+
+
+	// labels
+
+	d3.select('#captions')
+		.append('div')
+		.attr('id', 'types')
+		.selectAll('.label')
+		.data([
+			'Without automation', 
+			'With automation', 
+			'New short-haul jobs', 
+			'Automated trucks'
+		])
+		.enter()
+		.append('div')
+		.attr('class', 'label')
+		.attr('id', (d,i)=>{return `label${i}`})
+		.style('left', (d,i) => (i + 0) * 100/data.length+ vis.chart.barPadding/data.length+'%')
+		.style('width', 80/data.length + '%')
+		.text(d=>d)
+
+
+	d3.select('#captions')
+		.append('div')
+		.attr('id', 'years')
+		.selectAll('.label')	
+		.data(chartData)
+		.enter()
+		.append('div')
+		.attr('class', 'label')	
+		.style('margin-left',(d,i)=>{
+			return `${7+25*i}%`
+		})
+		// .style('width', 'auto')
+		.style('opacity', 1)
+		.text(d=>d.year)
+}
+
+buildExplainer([
+	{min:0, max:0.7}, 
+	{min:0, max:0.4},
+	{min:0.4, max:0.6},
+	{min:0.6, max:0.85}
+])
+
+
+function buildChart(){
+
+	for (year of chartData) {
+		var y = year.data[1];
+		year.max = y[0] + y[1] + y[2]
+	};
 	// actual chart
 
 	var actualChart = d3.select('#chart')
 		.append('div')
-		.attr('class','barSpace')
+		.attr('class','barSpace chart exploded')
 		.attr('id', 'actualChart')
+
+
+	// add one div per year
+	var year = actualChart
+		.selectAll('.year')
+		.data(chartData, d=>d)
+		.enter()
+		.append('div')
+		.attr('class', 'year')
+		.attr('id', (d,i)=>{return `year${i}`})
+		.style('transform', (d,i)=>{
+			return `scaleY(${i ===0 ? 0 : d.max/chartData[0].max})`
+		});
+
+	// within each year, add two bars
+	var bar = year
+		.selectAll('.bar')
+		.data(d => {
+
+			var bars = [
+				{bar: [1], scaled: d.data[0][0]/d.max},
+				{bar: d.data[1].map(num=>num/d.max), scaled: 1}
+			]
+
+
+			return bars
+
+		})
+		.enter()
+		.append('div')
+		.attr('class', 'bar actual')
+		.style('position', 'inherit')
+		.style('transform', (d,i)=>{
+			return `scaleY(${d.scaled})`
+		})
+
+	//within each bar, add sub-bars
+	bar
+		.selectAll('.subBar')
+		.data(d=>d.bar)
+		.enter()
+		.insert('div',":first-child")
+		.attr('class', (d, i)=>{
+
+			var barIndex = d === 1 ? 0 : 1;
+			return `subBar ${vis.chart.barClasses[i+barIndex]}`
+		})
+		.style('height', d=>`${d*100}%`)
+
 
 	var svg = d3.select('#chart')
 		.append('svg');
@@ -355,88 +577,18 @@ function buildChart(data){
 		.attr('x2', '100%')
 		.attr('y2', '100%')
 		.attr('class', 'axis');
-
-
-	// bars
-
-	chart
-		.selectAll('.bar')
-		.data(data)
-		.enter()
-		.append('div')
-		.attr('class', 'bar')
-		.style('transform', 'scaleY(0)')
-		.attr('id', (d,i)=>{return `bar${i}`})
-		.style('width', 80/data.length+'%')
-		.style('top', d=>100-d.max*100+'%')
-		.style('bottom', d=>d.min*100+'%')
-		.style('left', (d,i) => {
-			return i * 100/data.length+ vis.chart.barPadding/data.length+'%'
-		})
-		.style('background', (d,i)=>{return vis.chart.barColors[i]})
-
-
-	// labels
-
-	chart
-		.selectAll('.label')
-		.data([
-			'Without automation', 
-			'With automation', 
-			'New short-haul jobs', 
-			'Automated trucks'
-		])
-		.enter()
-		.append('div')
-		.attr('class', 'label')
-		.attr('id', (d,i)=>{return `label${i}`})
-		.style('left', (d,i) => (i + 0) * 100/data.length+ vis.chart.barPadding/data.length+'%')
-		.style('width', 80/data.length + '%')
-		.text(d=>d)
-
-
-	// back to actual chart
-	var year = actualChart
-		.selectAll('.year')
-		.data(chartData, d=>d)
-		.enter()
-		.append('div')
-		.attr('class', 'year');
-
-	year
-		.selectAll('.bar')
-		.data(d=>d.data)
-		.enter()
-		.append('div')
-		.attr('class', 'bar')
-		.style('width', '25%')
-		.style('top', (d,i)=>{
-			// var bottom = i === 0 ? 
-			var scaled = d / chartData[3].data[0];
-			// console.log(scaled)
-			return (1-scaled)*100 + '%'
-		})
-		.style('bottom', 0)
-
-	console.log(year.__data__)
-
 }
 
-buildChart([
-	{min:0, max:0.7}, 
-	{min:0, max:0.4},
-	{min:0.4, max:0.6},
-	{min:0.6, max:0.85}
-])
-
+buildChart();
+// vis.setChart(1)
 
 function scrollTo(scrollTop){
+
 	state.scrollPosition = scrollTop;
 	var rawProgress = state.scrollPosition/innerHeight;
-
-	var entering = state.currentSlide !== Math.floor(rawProgress);
-
-	state.currentSlide = Math.floor(rawProgress);
+	var newSlide = Math.floor(rawProgress);
+	var entering = state.currentSlide !== newSlide;
+	var rewinding = entering && state.currentSlide > newSlide;
 
 	if (entering) {
 
@@ -445,10 +597,10 @@ function scrollTo(scrollTop){
 
 		d3.select('#container')
 		.selectAll('p')
-		.data(d => tasks[state.currentSlide].text)
+		.data(d => tasks[newSlide].text)
 		.enter()
 		.append('p')
-		.style('font-size', tasks[state.currentSlide].textSize || '1em')
+		.style('font-size', tasks[newSlide].textSize || '1em')
 		.text(d=>d)
 		.attr('class', (d,i)=>{return 'p'+i});
 
@@ -458,8 +610,15 @@ function scrollTo(scrollTop){
 		}
 
 	}
-	if (state.currentSlide>=0) tasks[state.currentSlide].do(rawProgress%1, entering);
+
+	if (state.currentSlide>=0) tasks[newSlide].do(rawProgress%1, entering, rewinding);
+
+	state.currentSlide = newSlide;
+	state.slideProgress = rawProgress%1
+
 }
+
+
 document.querySelector('#sidebar').onscroll = function(e){
 
 	scrollTo(e.target.scrollTop);
