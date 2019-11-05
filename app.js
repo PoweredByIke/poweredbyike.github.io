@@ -123,8 +123,6 @@ var vis = {
 	//toggle between steps in explainer
 	setExplainer(step, rewinding){
 		
-
-
 		var blocking = this.chart.choreography[step];
 
 		d3.selectAll('#explainer .bar')
