@@ -1,5 +1,5 @@
 var state = {
-	scrollPosition:0,
+	scrollPosition:-1,
 	currentSlide:0,
 	slideProgress: -0
 }
@@ -51,7 +51,7 @@ var vis = {
 				map.setPaintProperty(
 					layer, 
 					layer === 'dallas' ? 'circle-color' : 'line-color', 
-					layer === driverLayer ? '#f09e05' : '#999'
+					layer === driverLayer ? '#f09e05' : '#064979'
 				)			
 		}
 	},
@@ -96,12 +96,12 @@ var vis = {
 
 		// update title
 
-		d3.select('#chartTitle')
-			.text(d=> `${chartData[step-1].area} by ${chartData[step-1].year}`)
+		// d3.select('#chartTitle')
+		// 	.text(d=> `${chartData[step-1].area} by ${chartData[step-1].year}`)
 
 		//update whole chart transform to fit on graph
 		d3.select('#actualChart')
-			.style('transform', `scaleX(${exploded ? 2.65 : 4/step})`);
+			.style('transform', `scaleX(${exploded ? 2.5 : 4/step})`);
 
 		// fade in/out appropriate year
 		d3.selectAll('.year')
@@ -109,7 +109,7 @@ var vis = {
 				return i < step
 			})
 			.style('transform', (d,i)=>{
-				return `scaleY(${d.max/chartData[step-1].max}) ${exploded ? 'translateX(-35%)' : ''}`
+				return `scaleY(${d.max/chartData[step-1].max}) ${exploded ? 'translateX(-30%)' : ''}`
 			})
 
 		if (step >=2) {
@@ -124,24 +124,17 @@ var vis = {
 	setExplainer(step, rewinding){
 		
 
-		if (false) {
-			d3.select('#bar3')
-				.style('animation-name', 'slideAndPop')
-				.style('animation-duration', '2s')
-		}
 
-		else {
+		var blocking = this.chart.choreography[step];
 
-			var blocking = this.chart.choreography[step];
+		d3.selectAll('#explainer .bar')
+			.style('transform', (d,i)=>{return blocking.bar[i].transform});
 
-			d3.selectAll('#explainer .bar')
-				.style('transform', (d,i)=>{return blocking.bar[i].transform});
+		d3.selectAll('#types .label')
+			.style('opacity', (d,i)=>{return blocking.label[i].opacity})	
+			.style('transform', (d,i)=>{return blocking.label[i].transform});	
 
-			d3.selectAll('#types .label')
-				.style('opacity', (d,i)=>{return blocking.label[i].opacity})	
-				.style('transform', (d,i)=>{return blocking.label[i].transform});	
-
-		}		
+		
 
 	},
 
@@ -170,7 +163,7 @@ var vis = {
 					{transform:''},
 					{transform:''},
 					{transform:''},
-					{transform:'translate(-12vw, 12vh) scaleY(0)'}
+					{transform:'translate(-12%, 12%) scaleY(0)'}
 				],
 				label: [
 					{opacity:0},
@@ -186,7 +179,7 @@ var vis = {
 					{transform:'scaleY(1)'},
 					{transform:''},
 					{transform:''},
-					{transform:'translate(-12vw, 12vh) scaleY(0)'}
+					{transform:'translate(-12vw, 80%) scaleY(0)'}
 				],
 				label: [
 					{opacity:1},
@@ -202,7 +195,7 @@ var vis = {
 					{transform:'scaleY(1)'},
 					{transform:'scaleY(1)'},
 					{transform:''},
-					{transform: 'translate(-12vw, 12vh) scaleY(1) '}
+					{transform: 'translate(-12vw, 80%) scaleY(1) '}
 				],
 				label: [
 					{opacity:1},
@@ -218,7 +211,7 @@ var vis = {
 					{transform:'scaleY(1)'},
 					{transform:'scaleY(1)'},
 					{transform:''},
-					{transform: 'translate(0vw, 12vh) scaleY(1) '}
+					{transform: 'translate(0vw, 80%) scaleY(1) '}
 				],
 				label: [
 					{opacity:1},
@@ -272,8 +265,10 @@ map.on('load', ()=>{
 
 			source:'interstate',		
 			paint: {
-				'line-width':4,
-				'line-color':'#0970b9',
+				'line-width':{
+					stops:[[0,1], [12,6]]
+				},
+				'line-color':'#064979',
 				'line-opacity':0
 			}
 		})
@@ -289,7 +284,7 @@ map.on('load', ()=>{
 		})
 
 
-	d3.select('#sidebar')
+	d3.select('#headerBar')
 		.append('div')
 		.attr('class', 'nav')
 		.selectAll('div')
@@ -299,15 +294,11 @@ map.on('load', ()=>{
 		.text(d=>d.title)
 		.on('click', (d)=>{
 			document.querySelector('#sidebar')
-				.scrollTo(0,innerHeight * d.page)
+				.scrollTo(0,document.querySelector('#sidebar').offsetHeight * d.page)
 				console.log(d)
 			d.do();
 		})
 
-	d3.select('#container')
-		.append('p')
-		.text(tasks[0].text[0])
-		.style('font-size', '2em');
 
 	d3.select('#journeyGraphics')
 		.selectAll('img')
@@ -315,6 +306,8 @@ map.on('load', ()=>{
 		.enter()
 		.append('img')
 		.attr('src', d=>`./assets/journey-${d}.jpg`)
+
+	populateSidebar(0)
 })
 
 buildSidebar();
@@ -335,9 +328,7 @@ function buildSidebar(){
 		.data(d => d.text)
 		.enter()
 		.append('p')
-		// .style('opacity', (d,i) => {return i===0 ? 1 : 1})
-		// .text(d=>d)
-		// .attr('class', (d,i)=>{return 'p'+i})
+
 }
 
 
@@ -389,7 +380,7 @@ function buildProfiles(name) {
 
 
 	d3.select('#container')
-		.append('img')
+		.insert('img', ':first-child')
 		.attr('class', 'driverMug')
 		.attr('src', `./assets/driver-${name}.jpg`)
 
@@ -406,6 +397,7 @@ function buildProfiles(name) {
 		.append('p')
 		.append('span')
 		.text(drivers[name].quote)
+		.attr('class', 'quote blue')
 
 	d3.select('#container')
 		.append('p')
@@ -414,7 +406,7 @@ function buildProfiles(name) {
 		.enter()
 		.append('span')
 		.text(d=>d)
-		.style('font-weight', (d,i)=>{return i === 0 ? 'bold' : 'regular'})
+		.attr('class', (d,i)=>{return i === 0 ? 'blue bold' : 0})
 
 	vis.highlightDriver(drivers[name].layer)
 }
@@ -476,6 +468,7 @@ function buildExplainer(data){
 	d3.select('#captions')
 		.append('div')
 		.attr('id', 'years')
+		.style('transform', 'scale(4)')
 		.selectAll('.label')	
 		.data(chartData)
 		.enter()
@@ -484,7 +477,6 @@ function buildExplainer(data){
 		.style('margin-left',(d,i)=>{
 			return `${7+25*i}%`
 		})
-		// .style('width', 'auto')
 		.style('opacity', 1)
 		.text(d=>d.year)
 }
@@ -585,31 +577,12 @@ buildChart();
 function scrollTo(scrollTop){
 
 	state.scrollPosition = scrollTop;
-	var rawProgress = state.scrollPosition/innerHeight;
+	var rawProgress = state.scrollPosition/document.querySelector('#sidebar').offsetHeight;
 	var newSlide = Math.floor(rawProgress);
 	var entering = state.currentSlide !== newSlide;
 	var rewinding = entering && state.currentSlide > newSlide;
 
-	if (entering) {
-
-		d3.selectAll('#container *')
-			.remove();
-
-		d3.select('#container')
-		.selectAll('p')
-		.data(d => tasks[newSlide].text)
-		.enter()
-		.append('p')
-		.style('font-size', tasks[newSlide].textSize || '1em')
-		.text(d=>d)
-		.attr('class', (d,i)=>{return 'p'+i});
-
-		if (tasks[state.currentSlide].progressiveText) {
-			d3.selectAll('#container p')
-				.style('opacity', (d,i)=>{return i === 0 ? 1 : 0})
-		}
-
-	}
+	if (entering) populateSidebar(newSlide)
 
 	if (state.currentSlide>=0) tasks[newSlide].do(rawProgress%1, entering, rewinding);
 
@@ -618,6 +591,33 @@ function scrollTo(scrollTop){
 
 }
 
+function populateSidebar(newSlide){
+	var slide = tasks[newSlide];
+
+	d3.selectAll('#container *')
+		.remove();
+
+	if (slide.header) {
+		d3.select('#container')
+			.append('div')
+			.attr('class', 'bold blue header')
+			.text(slide.header)
+	}
+
+	d3.select('#container')
+	.selectAll('p')
+	.data(d => slide.text)
+	.enter()
+	.append('p')
+	.style('font-size', slide.textSize || '1em')
+	.text(d=>d)
+	.attr('class', (d,i)=>{return 'p'+i});
+
+	if (tasks[state.currentSlide].progressiveText) {
+		d3.selectAll('#container p')
+			.style('opacity', (d,i)=>{return i === 0 ? 1 : 0})
+	}	
+}
 
 document.querySelector('#sidebar').onscroll = function(e){
 

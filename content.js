@@ -33,16 +33,17 @@ var bounds = {
 
 var tasks = [
 
-	{
-		"text":["The job impacts of automated trucks"],
-		textSize:"2em",
-		do: function(progress, entering) {
+	// {
+	// 	"text":["The job impact of automated trucks"],
+	// 	textSize:"2em",
+	// 	do: function(progress, entering) {
 
-			if (entering) vis.setOverlay('none')
-		}
-	},
+	// 		if (entering) vis.setOverlay('none')
+	// 	}
+	// },
 
 	{
+		"header": "The freight landscape: today and tomorrow",
 		"text":[
 			"Every day, millions of tons of goods move across the United States on the interstate highway system in Class 8 tractor trailer trucks."
 		],
@@ -57,7 +58,7 @@ var tasks = [
 			
 			if (entering) {
 				vis.setOverlay('us');
-				map.fitBounds(bounds.us, {duration:3000})
+				map.fitBounds(bounds.us, {duration:1000})
 				// map.easeTo({zoom:4})
 
 			}
@@ -79,7 +80,7 @@ var tasks = [
 
 			if (entering) {
 				vis.setOverlay('el paso');				
-				map.fitBounds(bounds.elPaso, {duration:3000});
+				map.fitBounds(bounds.elPaso, {duration:1000});
 
 			}
 			
@@ -158,11 +159,13 @@ var tasks = [
 
 				vis.setOverlay('none');
 
-				map.fitBounds(bounds.us, {duration:3000});
+				map.fitBounds(bounds.us, {duration:1000});
 			}
 		}
 	},
+
 	{
+		"header": "Effects of automation",
 		"text":[
 			"Automated trucks won’t be able to drive everywhere all at once. It will take years before they can drive complex routes, even on the highway.",
 			"For this analysis, we assumed four geographic zones that become available over time as automated trucking technology improves, and made a number of assumptions about cost and utilization.",
@@ -185,6 +188,7 @@ var tasks = [
 
 		}
 	},
+
 	{
 		"text":[
 			"In each region, we start with a baseline number of trucking jobs, based on the total miles trucks drive on those roads each year."
@@ -200,7 +204,6 @@ var tasks = [
 		}
 	},
 	{
-
 		"text":[
 			"Then we model how many automated trucks that market would demand, and how many miles they drive, which tells us how many fewer baseline jobs there would be.",
 			"Automated trucks can drive more miles than one person in a year, so the bars don’t even out.",
@@ -238,6 +241,7 @@ var tasks = [
 		}
 	},
 	{
+		"header": "Texas by 2024",
 		"text":[
 			"Here’s what the model tells us could happen over time as we step through the four regions.",
 			"Automated trucks may begin operating first on highways in Texas, handing off to local drivers.",
@@ -261,10 +265,10 @@ var tasks = [
 		}
 	},
 	{
+		"header": "Southwest by 2026",
 		"text":[
 			"By mid-decade, we assume automated trucks operate across the southwest United States, and in California. The good weather and high freight density are a good match, and the utilization of automated vehicles begins to improve productivity."
 		],
-		textSize: '0.75em',
 		do: function(progress, entering){
 			if (entering) {
 				vis.setOverlay('southwest')
@@ -278,6 +282,7 @@ var tasks = [
 		}
 	},
 	{
+		"header": "South by 2028",
 		"text":[
 			"Over the next two years, automated trucks spread east and begin making journeys across the entire continent. The winter weather to the north likely requires more development and testing."
 		],
@@ -290,6 +295,7 @@ var tasks = [
 		}
 	},
 	{
+		"header": "Nationwide by 2030",
 		"text":[
 			"In ten years, we assume automated trucks operate across the entire country, and may begin working internationally. Utilization and cost savings reach maturity and drive big increases in freight volumes and short haul jobs."
 		],
@@ -308,7 +314,6 @@ var tasks = [
 			"Ten years from now, automated trucks will be hauling loads all across the country.",
 			"This analysis tells us that many long haul truck driving jobs will shift to short haul. While that may not offset all the loss in jobs, it will mean more opportunities for truckers to sleep in their own beds at night and do the work that is hard to automate.", 
 			"Let’s go deeper on how this model might impact real drivers.",
-			"Next: Real driver stories >>"
 		],
 		textSize: '0.95em',
 		do: function(progress, entering){
@@ -316,10 +321,12 @@ var tasks = [
 				map.easeTo({pitch:0})
 				vis.setOverlay('us_blue')
 				vis.toggle('mainSections', '')
+				vis.toggle('chart', '#actualChart')
 			}
 		}
 	},
 	{
+		"header": "Real driver stories",
 		"text":[
 			"At Ike, we’re focused on building technology that helps people. That means we have to understand truckers and make sure our product doesn’t leave them behind.",
 			"The trucking industry is complex, and there any many kinds of driving jobs. Some truckers will see their roles change with automation, and some won’t.",
@@ -330,11 +337,12 @@ var tasks = [
 		do: function(progress, entering){
 			if (entering) {
 				vis.setOverlay(Object.keys(drivers).map(d=>drivers[d].layer))
-				map.fitBounds(bounds.us, {duration:3000})
+				map.fitBounds(bounds.us, {duration:1000})
 			}
 		}
 	},
 	{
+		"header": "Charles",
 		"text":[
 		],
 		do: function(progress, entering){
@@ -342,6 +350,7 @@ var tasks = [
 		}
 	},
 	{
+		"header": "Don",
 		"text":[
 		],
 		do: function(progress, entering){
@@ -349,6 +358,7 @@ var tasks = [
 		}
 	},
 	{
+		"header": "Steve",
 		"text":[
 		],
 		do: function(progress, entering){
@@ -356,6 +366,7 @@ var tasks = [
 		}
 	},
 	{
+		"header": "Tiff",
 		"text":[
 		],
 		do: function(progress, entering){
@@ -363,10 +374,14 @@ var tasks = [
 		}
 	},
 	{
+		"header": "Tommy",
 		"text":[
 		],
 		do: function(progress, entering){
-			if (entering) buildProfiles('Tommy')
+			if (entering) {
+				buildProfiles('Tommy')
+				vis.setOverlay(Object.keys(drivers).map(d=>drivers[d].layer))
+			}
 		}
 	},
 
@@ -386,23 +401,24 @@ var tasks = [
 ]
 
 var navLinks = [
-	{title: 'Intro', page: 1, do: function(){
+	{title: 'Intro', page: 0, do: function(){
 		vis.toggle('mainSections', '')
 	}},
-	{title: 'Data', page: 9, do: function(){
+	{title: 'Data', page: 8, do: function(){
 		vis.toggle('mainSections', '');
 		vis.toggle('labelSet', '#types')
 	}},
-	{title: 'Drivers', page: 18,do: function(){vis.toggle('mainSections', '')}}
+	{title: 'Drivers', page: 17,do: function(){
+		vis.toggle('mainSections', '')
+	}}
 ]
 
 var drivers = {
 	Charles: {
 		blurb: [
-			'Charles', 
 			'Over the road driver',
 			'Age: 31',
-			'Favorite haul:'
+			'Favorite haul: food for a church'
 		],
 		layer: 'midwest',
 		quote: '“The hardest part is being away from your family, not getting that regular routine of working a 9 to 5. If I want to go out with my friends, that lifestyle is put aside for the permanent lifestyle of being a professional driver.”',
@@ -410,10 +426,9 @@ var drivers = {
 	},
 	Don: {
 		blurb: [
-			'Don',
 			'Local driver',
 			'Age: 58',
-			'Favorite haul: Horses'
+			'Favorite haul: horses'
 		],
 		layer: 'st. louis',
 		quote: '“I would never go over the road ever again. I sacrificed time and place for money, which is what truckers do. They sacrifice so much. It is a tough job. Mentally, emotionally, it is so tough”',
@@ -421,10 +436,9 @@ var drivers = {
 	},
 	Steve: {
 		blurb: [
-			'Steve', 
 			'Owner operator',
 			'Age: 60',
-			'Favorite haul: An antique Russian tank'
+			'Favorite haul: an antique Russian tank'
 		],
 		layer: 'southeast',
 		quote: '“I like to stay out for four or five weeks and then take three weeks off. Some truckers will ask me how can you be gone that long, and I say to them, how can you work 52 weeks straight?”',
@@ -432,10 +446,9 @@ var drivers = {
 	},
 	Tiff: {
 		blurb: [
-			'Tiff', 
 			'Small fleet owner',
 			'Age: 44',
-			'Favorite haul: Ice cream'
+			'Favorite haul: ice cream'
 		],
 		layer: 'dallas',
 		quote: '“I enjoy being able to take care of my drivers. When I was first starting out, I was earning like $400 a week and barely making it. Now I want to make sure to pay my drivers a decent salary so that they can make a living and also be able to enjoy life.”',
@@ -443,16 +456,18 @@ var drivers = {
 	},
 	Tommy: {
 		blurb: [
-			'Tommy', 
 			'Automated vehicle operator',
 			'Age: 56',
-			'Favorite haul: Sailboats'
+			'Favorite haul: sailboats'
 		],
 		layer: 'california',
 		quote: '“I used to be very skeptical of this automation stuff. Then I started looking into it more and I was reassured. The long hauls might be automated but there’s no way you’re going to have robots driving hazardous loads and local routes.”',
 		change:'It doesn’t. Even when automated trucks are driving throughout the country, AVOs like Tommy will be needed to help test and improve new versions of the technology.'
 	},
 
+	style :{
+
+	}
 }
 
 

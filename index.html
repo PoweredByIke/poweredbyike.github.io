@@ -18,6 +18,10 @@
 
 <style>
 
+        @font-face {
+            font-family:Noe;
+            src:url("./assets/Noe Display Bold.otf")
+        }
     body, html {
         height:100%;
         margin:0;
@@ -27,10 +31,25 @@
         font-family: 'Source Sans Pro', sans-serif;
     }
 
+    #headerBar {
+        background:#064979;
+        height:80px;
+    }
+
+    #logo {
+        height:100%; transform:scale(0.75)
+    }
+    #mainTitle {
+        transform: translateX(5%) translateY(-35%);
+        display: inline-block;
+        height: 100%;
+        font-family:Noe; font-size:2vw; color:white
+    
+    }
     #map {
         position: fixed;
         width:60%;
-        top:0; 
+        top:80px; 
         bottom:0;
     }
 
@@ -84,7 +103,7 @@
     .year {
         width: 20%;
         margin-left: 5%;
-        height: 60vh;
+        height: 100%;
         display: inline-block;
         /*outline:1px solid purple;*/
         opacity: 0;
@@ -160,6 +179,10 @@
         /*outline:1px solid purple;*/
     }
 
+
+    #captions * {
+        transition:all 1s;
+    }
     #years {
         opacity:0;
         transition: transform 1s;
@@ -233,8 +256,9 @@
         left: 60%;
         overflow-y: scroll;
         font-size:calc(1.5vh + 1vw);
-        position:relative;
-        height: 100%;
+        position:absolute;
+        top:80px;
+        bottom: 0%;
     }
 
     #content {
@@ -246,21 +270,28 @@
     }
 
     .nav {
-        position: fixed;
-        top: 3vh;
         width: 40%;
-        font-size:0.5em;
         text-transform:uppercase;
-        opacity:0.5;
         cursor:pointer;
+        float: right;
+        color:white;
+        margin-top: 40px;
+        transform: translateY(-50%);
     }
 
     .nav div {
         display:inline-block;
         width:33%;
+        transition: all 0.2s;
         text-align: center;
+        opacity:0.75;
+        transform:scale(1.25);
     }
 
+    .nav div:hover {
+        transform:scale(1.5);
+        opacity:1;
+    }
     #container {
         padding:10%;
     }
@@ -282,6 +313,20 @@
         height:100%;
     }
 
+    .blue {
+        color: #064979;
+    }
+
+    .bold {
+        font-weight:bold;
+    }
+    .header {
+        font-size:1.2em;
+    }
+
+    .quote {
+        font-style: italic;
+    }
     section {
         /*margin: 0% 15%;*/
         outline: 2px solid rgba(6,73,121,0.1);
@@ -314,17 +359,25 @@
     #chevron:after {
         content:'⌄';
         font-size:3em;
-        animation:pulse 2s infinite;
-        /*animation-duration: 5s;*/
+        animation:pulse 3s infinite;
     }
 
     @keyframes pulse {
-        0%   {opacity:0.25}
-        100%  {opacity:0.75}
+        0%   {opacity:0.25; transform: translateY(0%)}
+        50%  {opacity:0.5; transform: translateY(-100%);}
+        100%   {opacity:0.25; transform: translateY(0%)}
     }
 
     @media (max-width:600px) {
 
+        #headerBar {
+            height:60px;
+        }
+
+
+        #mainTitle{
+            font-size:4vw;
+        }
         .nav {
             display:none;
         }
@@ -334,19 +387,25 @@
         }
         
         .axisLabel {
-            width:40vh;
+            width:27vh;
             font-size:5vw;
             margin-left:-3vw;
         }
+        
+
+        .label {
+            font-size:3vw;
+        }
         #map {
+            top:60px;
             width:100%;
-            bottom:40%;
+            bottom:50%;
         }
 
         #sidebar {
             width:100%;
             bottom:0;
-            top:60%;
+            top:50%;
             position:absolute;
             left:0;
             font-size: 3vh;
@@ -357,14 +416,23 @@
         }
 
         #container {
-            padding:5%;
+            padding: 5%;
         }
+    
+        #chevron {
+            width:100%;
+        }
+
     }
 </style>
+<div id='headerBar'>
+    <img src='assets/logo.png' id='logo'>
+            <div id='mainTitle'>The job impact of automated trucks</div>
 
+</div>
 <div id='map'>
     <div id='chart'>
-        <div id='chartTitle'>Effects of Automation</div>
+        <!-- <div id='chartTitle'>Effects of Automation</div> -->
         <div id = 'captions'></div>
     </div>
     <div id='journeyGraphics' style='pointer-events: none; background:white'></div>
@@ -372,7 +440,7 @@
 <div id='sidebar'>
     <div id='content'>
         <div id='container'></div>
-        <div id='chevron'></div>
+        <div id='chevron' class='blue'></div>
     </div>
     <div id='drawer'></div>
 </div>
