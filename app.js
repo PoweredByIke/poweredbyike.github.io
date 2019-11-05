@@ -468,6 +468,9 @@ function buildExplainer(data){
 		.attr('id', (d,i)=>{return `label${i}`})
 		.style('left', (d,i) => (i + 0) * 100/data.length+ vis.chart.barPadding/data.length+'%')
 		.style('width', 80/data.length + '%')
+		
+		.append('div')
+		.attr('class', 'rotator')
 		.text(d=>d)
 
 

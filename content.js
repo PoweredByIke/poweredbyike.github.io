@@ -151,7 +151,7 @@ var tasks = [
 	},
 
 	{
-		"text":["But how many jobs and what’s the impact over time? Ike has worked with economist Dr. Charles Hodgson to explore the impact of automated trucks and our highway focused model on truck driving jobs."],
+		"text":["But how many jobs, and what’s the impact over time? Ike has worked with economist Dr. Charles Hodgson to explore the impact of automated trucks and our highway focused model on truck driving jobs."],
 		do: function(progress, entering){
 			if (entering) {
 
@@ -323,8 +323,9 @@ var tasks = [
 			"In ten years, we assume automated trucks operate across the entire country, and may begin working internationally. Utilization and cost savings reach maturity and drive big increases in freight volumes and short haul jobs."
 		],
 		do: function(progress, entering){
-			vis.setOverlay('us_blue')
 			map.fitBounds(bounds.us, {duration:1000})
+			vis.setOverlay('us_blue')
+
 			if (entering) {
 				vis.toggle('mainSections', '#chart')
 				vis.setChart(4)
