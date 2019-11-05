@@ -345,7 +345,8 @@ var tasks = [
 				map.easeTo({pitch:0})
 				vis.setOverlay('us_blue')
 				vis.toggle('mainSections', '')
-				vis.toggle('chart', '#actualChart')
+				d3.select('#chart')
+					.attr('mode', 'actual')
 			}
 		}
 	},

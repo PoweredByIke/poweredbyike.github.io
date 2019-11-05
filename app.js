@@ -468,7 +468,7 @@ function buildExplainer(data){
 		.attr('id', (d,i)=>{return `label${i}`})
 		.style('left', (d,i) => (i + 0) * 100/data.length+ vis.chart.barPadding/data.length+'%')
 		.style('width', 80/data.length + '%')
-		
+
 		.append('div')
 		.attr('class', 'rotator')
 		.text(d=>d)
@@ -603,9 +603,9 @@ function scrollTo(scrollTop){
 		d3.selectAll('.nav div')
 			.style('opacity', (d,i)=>{
 				var active = newSlide >= d.page && (!navLinks[i+1] || newSlide < navLinks[i+1].page)
-				// if (newSlide > d.page) notFoundYet = false;
-				return active ? 1: 0.5
+				return active ? 1: ''
 			})
+			.classed('bold', (d,i)=>{return newSlide >= d.page && (!navLinks[i+1] || newSlide < navLinks[i+1].page)})
 	}
 
 	if (state.currentSlide>=0) tasks[newSlide].do(rawProgress%1, entering, rewinding);
