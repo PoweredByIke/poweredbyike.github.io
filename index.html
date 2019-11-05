@@ -44,7 +44,7 @@
         translateY(-35%);
         display: inline-block;
         height: 100%;
-        font-family:Noe; font-size:2vw; 
+        font-family:Noe; font-size:1.5vw; 
         color:white
     
     }
@@ -104,7 +104,8 @@
         opacity:0;
     }
 
-    #chart[mode='actual'] #actualChart {
+    #chart[mode='actual'] #actualChart,
+    #chart[mode='actual'] .axisMax {
         opacity:1;
     }
 
@@ -247,6 +248,17 @@
     .automated {
         background:#054D7F;
     }
+    .axisMax {
+        padding-left: 5%;
+        font-size: 2em;
+        border-bottom: 6px dotted #ccc;
+        color:#aaa;
+        transform: translateY(37%);
+        opacity:0;
+        position: absolute;
+        width: 100%;
+        height: 7%;
+    }
 
     .axisLabel {
         transform: translateX(-50%) rotate(-90deg);
@@ -289,7 +301,7 @@
         width: 40%;
         left: 60%;
         overflow-y: scroll;
-        font-size:calc(1vh + 1vw);
+        font-size:calc(1vh + 1.5vw);
         position:absolute;
         top:80px;
         bottom: 0%;
@@ -332,7 +344,7 @@
 
     #container span {
         display:block;
-        font-size:0.8em;
+        /*font-size:0.8em;*/
     }
 
     .driverMug {
@@ -389,11 +401,12 @@
         bottom:0;
         text-align: center;
         width: 40%;
+        transform: translateY(-100%);
     }
 
     #chevron:after {
-        content:'⌄';
-        font-size:3em;
+        content:'▾ SCROLL DOWN ▾';
+        font-size:0.8em;
         animation:pulse 3s infinite;
     }
 
@@ -411,7 +424,7 @@
 
 
         #mainTitle{
-            font-size:4vw;
+            font-size:5vw;
         }
         .nav {
             display:none;
@@ -421,6 +434,11 @@
             stroke-width:1vw;
         }
         
+        .axisMax {
+            font-size:4vw;
+            border-bottom:4px dotted #ccc;
+            margin-top:2%;
+        }
         .axisLabel {
             width:27vh;
             font-size:5vw;
@@ -448,7 +466,7 @@
             top:50%;
             position:absolute;
             left:0;
-            font-size: 3vh;
+            font-size: 2.5vh;
         }
 
         #content {
@@ -459,8 +477,12 @@
             padding: 0% 5%;
         }
     
+        .driverMug {
+            margin-top:5%;
+        }
         #chevron {
             width:100%;
+            transform: translateY(-50%);
         }
 
     }

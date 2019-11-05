@@ -455,16 +455,24 @@ var tasks = [
 ]
 
 var navLinks = [
-	{title: 'Intro', page: 0, do: function(){
-		vis.toggle('mainSections', '')
-	}},
-	{title: 'Data', page: 8, do: function(){
-		vis.toggle('mainSections', '');
-		vis.toggle('labelSet', '#types');
-		d3.select('#chart')
-			.attr('mode', 'explainer')
-	}},
-	{title: 'Drivers', page: 17,do: function(){
+	{
+		title: 'Intro', 
+		page: 0, 
+		do: function(){
+			vis.toggle('mainSections', '')
+		}
+	},
+	{
+		title: 'Data', 
+		page: 8, 
+		do: function(){
+			vis.toggle('mainSections', '');
+			vis.toggle('labelSet', '#types');
+			d3.select('#chart')
+				.attr('mode', 'explainer')
+		}
+	},
+	{title: 'Drivers', page: 18,do: function(){
 		vis.toggle('mainSections', '')
 	}}
 ]

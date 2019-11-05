@@ -103,15 +103,19 @@ var vis = {
 		d3.select('#actualChart')
 			.style('transform', `scaleX(${exploded ? 2.5 : 4/step}) translateY(-1px)`);
 
-		// fade in/out appropriate year (capped at 80% height)
+		// fade in/out appropriate year (capped at 90% height)
 		d3.selectAll('.year')
 			.classed('expanded', (d,i)=>{
 				return i < step
 			})
 			.style('transform', (d,i)=>{
-				return `scaleY(${0.8 * d.max/chartData[step-1].max}) ${exploded ? 'translateX(-30%)' : ''}`
+				return `scaleY(${0.9 * d.max/chartData[step-1].max}) ${exploded ? 'translateX(-30%)' : ''}`
 			})
 
+
+		// set max number
+		d3.select('.axisMax')
+			.text(chartData[step-1].max.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
 		if (step >=2) {
 
 			d3.select('#years')
@@ -419,6 +423,10 @@ function buildExplainer(data){
 
 	chart
 		.append('div')
+		.attr('class', 'axisMax')
+
+	chart
+		.append('div')
 		.attr('class', 'axisLabel')
 		.text('Jobs')
 
@@ -494,6 +502,7 @@ function buildChart(){
 		year.max = y[0] + y[1] + y[2]
 	};
 	// actual chart
+
 
 	var actualChart = d3.select('#chart')
 		.append('div')
@@ -581,7 +590,20 @@ function scrollTo(scrollTop){
 	var entering = state.currentSlide !== newSlide;
 	var rewinding = entering && state.currentSlide > newSlide;
 
-	if (entering) populateSidebar(newSlide)
+	if (entering) {
+
+		populateSidebar(newSlide)
+		notFoundYet = true;
+
+
+
+		d3.selectAll('.nav div')
+			.style('opacity', (d,i)=>{
+				var active = newSlide >= d.page && (!navLinks[i+1] || newSlide < navLinks[i+1].page)
+				// if (newSlide > d.page) notFoundYet = false;
+				return active ? 1: 0.5
+			})
+	}
 
 	if (state.currentSlide>=0) tasks[newSlide].do(rawProgress%1, entering, rewinding);
 
