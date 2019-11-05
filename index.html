@@ -40,10 +40,12 @@
         height:100%; transform:scale(0.75)
     }
     #mainTitle {
-        transform: translateX(5%) translateY(-35%);
+        transform: translateX(5%) 
+        translateY(-35%);
         display: inline-block;
         height: 100%;
-        font-family:Noe; font-size:2vw; color:white
+        font-family:Noe; font-size:2vw; 
+        color:white
     
     }
     #map {
@@ -54,7 +56,6 @@
     }
 
     #map:before {
-        content: '<Journey graphics here>';
         position:absolute;
         padding:30px;
         color:white;
@@ -81,6 +82,32 @@
         background: rgba(255,255,255,0.75);
     } 
 
+
+/*graph modes*/
+
+    /*overall chart section visibility*/
+    #chart.active {
+        opacity:1;
+    }
+
+    #chart.active .axis {
+        stroke-dashoffset: 0;
+    }
+
+    /*explainer/actual chart visibility*/
+
+    #chart[mode='explainer'] #explainer .bar{
+        opacity:1;
+    }
+
+    #chart[mode='actual'] #explainer .bar {
+        opacity:0;
+    }
+
+    #chart[mode='actual'] #actualChart {
+        opacity:1;
+    }
+
     /*graph styling*/
     
     #chartTitle {
@@ -97,7 +124,7 @@
         opacity:0;
         transition: all 1s;
         transform-origin: bottom left;
-        transform: scaleX(2.65);
+        transform: scaleX(2.5);
     }
 
     .year {
@@ -241,6 +268,13 @@
     }
 
     #journeyGraphics img {
+        object-fit: cover;
+        width:100%;
+        height:100%;
+        position: absolute;
+        opacity:0;
+        transition:opacity 0.5s;
+/*        
         width:100%;
         max-width:1000px;
         position: absolute;
@@ -248,14 +282,14 @@
         transition:opacity 0.5s;
         max-width: 1000px;
         transform: translateX(-50%);
-        left: 50%;
+        left: 50%;*/
     }
 
     #sidebar {
         width: 40%;
         left: 60%;
         overflow-y: scroll;
-        font-size:calc(1.5vh + 1vw);
+        font-size:calc(1vh + 1vw);
         position:absolute;
         top:80px;
         bottom: 0%;
@@ -322,6 +356,7 @@
     }
     .header {
         font-size:1.2em;
+        padding-top:20px;
     }
 
     .quote {
@@ -396,6 +431,11 @@
         .label {
             font-size:3vw;
         }
+
+        #types .label {
+            transform:translateX(-30%) translateY(60%) rotate(-40deg);
+            text-align:right;
+        }
         #map {
             top:60px;
             width:100%;
@@ -416,7 +456,7 @@
         }
 
         #container {
-            padding: 5%;
+            padding: 0% 5%;
         }
     
         #chevron {

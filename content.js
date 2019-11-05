@@ -160,6 +160,8 @@ var tasks = [
 				vis.setOverlay('none');
 
 				map.fitBounds(bounds.us, {duration:1000});
+				d3.select('#chart')
+					.classed('active', false)
 			}
 		}
 	},
@@ -168,7 +170,6 @@ var tasks = [
 		"header": "Effects of automation",
 		"text":[
 			"Automated trucks won’t be able to drive everywhere all at once. It will take years before they can drive complex routes, even on the highway.",
-			"For this analysis, we assumed four geographic zones that become available over time as automated trucking technology improves, and made a number of assumptions about cost and utilization.",
 			"(Note this is a simplification used to build our analysis, not a prediction of the specific geographies or numbers. It’s still hard to know where and how automated trucks will deploy.)"
 		],
 		textSize: '0.85em',
@@ -176,10 +177,12 @@ var tasks = [
 
 			if (entering) {
 				vis.toggle('mainSections', '#chart');
-				vis.toggle('chart', '#explainer .bar')
+				// vis.toggle('chart', '#explainer .bar')
 
-				d3.selectAll('.axis')
-					.style('stroke-dashoffset', 0)
+
+				d3.select('#chart')
+					.classed('active', true)
+					.attr('mode', 'explainer')
 
 				vis.setExplainer(0)
 
@@ -191,6 +194,7 @@ var tasks = [
 
 	{
 		"text":[
+			"For this analysis, we assumed four geographic zones that become available over time as automated trucking technology improves, and made a number of assumptions about cost and utilization.",
 			"In each region, we start with a baseline number of trucking jobs, based on the total miles trucks drive on those roads each year."
 		],
 
@@ -226,8 +230,13 @@ var tasks = [
 
 				if (rewinding) {
 					vis.setExplainer(4);
-					vis.toggle('chart', '#explainer .bar')
+					// vis.toggle('chart', '#explainer .bar')
+
+					d3.select('#chart')
+						.classed('active', true)
+						.attr('mode', 'explainer')
 				}
+
 				else vis.setExplainer(3)
 
 				d3.select('#chartTitle')
@@ -245,9 +254,8 @@ var tasks = [
 		"text":[
 			"Here’s what the model tells us could happen over time as we step through the four regions.",
 			"Automated trucks may begin operating first on highways in Texas, handing off to local drivers.",
-			"Early on, we expect automated trucks to have uptime similar to today’s vehicles, and a cost profile that’s not much different. Still, small improvements can still generate new demand for freight. In our model, this actually creates new jobs in Texas in the first few years. "
 		],
-		textSize: '0.75em',
+		// textSize: '0.75em',
 		do: function(progress, entering){
 
 
@@ -256,12 +264,27 @@ var tasks = [
 				map
 				.fitBounds(bounds.texas, {duration:1000})
 				vis.toggle('labelSet', '#types')
-				vis.toggle('chart', '#actualChart')
-				vis.setChart(1, true)
+				// vis.toggle('chart', '#actualChart')
+
+				d3.select('#chart')
+					.classed('active', true)
+					.attr('mode', 'actual')
+
+				vis.setChart(1, true);
 				d3.select('#actualChart')
 					.classed('exploded',true)
 
 			}
+		}
+	},
+	{
+		"header": "Texas by 2024",
+		"text":[
+			"Early on, we expect automated trucks to have uptime similar to today’s vehicles, and a cost profile that’s not much different. Still, small improvements can still generate new demand for freight. In our model, this actually creates new jobs in Texas in the first few years. "
+		],
+		// textSize: '0.75em',
+		do: function(progress, entering){
+
 		}
 	},
 	{
@@ -350,12 +373,26 @@ var tasks = [
 		}
 	},
 	{
+		"header": "How does Charles's job change?",
+		"text":[
+			'In the future, Charles may have more opportunities to work 9 to 5 and stay close to family and friends. His role may shift to local driving, handing off loads to automated trucks for the long haul.'
+		],
+	},
+
+
+	{
 		"header": "Don",
 		"text":[
 		],
 		do: function(progress, entering){
 			if (entering) buildProfiles('Don')
 		}
+	},
+	{
+		"header": "How does Don's job change?",
+		"text":[
+			"It doesn’t. Instead, many over the road drivers may shift to roles like Don’s, and he’ll have a lot more volume of freight available for local driving, with automated trucks sticking to the highways."
+		],
 	},
 	{
 		"header": "Steve",
@@ -366,12 +403,24 @@ var tasks = [
 		}
 	},
 	{
+		"header": "How does Steve's job change?",
+		"text":[
+			'It doesn’t. Experienced operators like Steve will be hauling specialized freight for a long time to come. Some day automated trucks may be able to do this work, but Steve will be long retired.'
+		],
+	},
+	{
 		"header": "Tiff",
 		"text":[
 		],
 		do: function(progress, entering){
 			if (entering) buildProfiles('Tiff')
 		}
+	},
+	{
+		"header": "How does Tiff's job change?",
+		"text":[
+			'Tiff may add automated trucks to her small fleet, and use her drivers to handle to and from the highway. She may find it easier to hire and retain drivers by helping them stay local.'
+		],
 	},
 	{
 		"header": "Tommy",
@@ -384,7 +433,12 @@ var tasks = [
 			}
 		}
 	},
-
+	{
+		"header": "How does Tommy's job change?",
+		"text":[
+			'It doesn’t. Even when automated trucks are driving throughout the country, AVOs like Tommy will be needed to help test and improve new versions of the technology.'
+		],
+	},
 	{
 		"text":[
 			"Ike has open sourced this analysis under the MIT license. You can explore the full code and data on GitHub.", 
@@ -406,7 +460,9 @@ var navLinks = [
 	}},
 	{title: 'Data', page: 8, do: function(){
 		vis.toggle('mainSections', '');
-		vis.toggle('labelSet', '#types')
+		vis.toggle('labelSet', '#types');
+		d3.select('#chart')
+			.attr('mode', 'explainer')
 	}},
 	{title: 'Drivers', page: 17,do: function(){
 		vis.toggle('mainSections', '')

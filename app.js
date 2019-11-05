@@ -101,15 +101,15 @@ var vis = {
 
 		//update whole chart transform to fit on graph
 		d3.select('#actualChart')
-			.style('transform', `scaleX(${exploded ? 2.5 : 4/step})`);
+			.style('transform', `scaleX(${exploded ? 2.5 : 4/step}) translateY(-1px)`);
 
-		// fade in/out appropriate year
+		// fade in/out appropriate year (capped at 80% height)
 		d3.selectAll('.year')
 			.classed('expanded', (d,i)=>{
 				return i < step
 			})
 			.style('transform', (d,i)=>{
-				return `scaleY(${d.max/chartData[step-1].max}) ${exploded ? 'translateX(-30%)' : ''}`
+				return `scaleY(${0.8 * d.max/chartData[step-1].max}) ${exploded ? 'translateX(-30%)' : ''}`
 			})
 
 		if (step >=2) {
@@ -397,14 +397,14 @@ function buildProfiles(name) {
 		.text(drivers[name].quote)
 		.attr('class', 'quote blue')
 
-	d3.select('#container')
-		.append('p')
-		.selectAll('span')
-		.data([`How does ${name}'s job change?`, drivers[name].change])
-		.enter()
-		.append('span')
-		.text(d=>d)
-		.attr('class', (d,i)=>{return i === 0 ? 'blue bold' : 0})
+	// d3.select('#container')
+	// 	.append('p')
+	// 	.selectAll('span')
+	// 	.data([`How does ${name}'s job change?`, drivers[name].change])
+	// 	.enter()
+	// 	.append('span')
+	// 	.text(d=>d)
+	// 	.attr('class', (d,i)=>{return i === 0 ? 'blue bold' : 0})
 
 	vis.highlightDriver(drivers[name].layer)
 }
@@ -451,7 +451,7 @@ function buildExplainer(data){
 		.data([
 			'Without automation', 
 			'With automation', 
-			'New short-haul jobs', 
+			'New short haul jobs', 
 			'Automated trucks'
 		])
 		.enter()
@@ -499,6 +499,7 @@ function buildChart(){
 		.append('div')
 		.attr('class','barSpace chart exploded')
 		.attr('id', 'actualChart')
+		// .style('transform', 'translateX(100%)')
 
 
 	// add one div per year
@@ -603,13 +604,13 @@ function populateSidebar(newSlide){
 	}
 
 	d3.select('#container')
-	.selectAll('p')
+	.selectAll('.regular')
 	.data(d => slide.text)
 	.enter()
 	.append('p')
-	.style('font-size', slide.textSize || '1em')
+	// .style('font-size', slide.textSize || '1em')
 	.text(d=>d)
-	.attr('class', (d,i)=>{return 'p'+i});
+	.attr('class', (d,i)=>{return 'regular p'+i});
 
 	if (tasks[state.currentSlide].progressiveText) {
 		d3.selectAll('#container p')
