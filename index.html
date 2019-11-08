@@ -7,8 +7,6 @@
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
-
-
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="./content.js"></script>
 
@@ -26,7 +24,7 @@
         height:100%;
         margin:0;
         padding:0;
-        background: #c8d2da;
+        background: #fafafa;
         overflow:hidden;
         font-family: 'Source Sans Pro', sans-serif;
     }
@@ -37,14 +35,15 @@
     }
 
     #logo {
-        height:100%; transform:scale(0.75)
+        height:100%; 
+        transform:scale(0.6);
     }
     #mainTitle {
-        transform: translateX(5%) 
-        translateY(-35%);
+        transform: translateY(-35%);
         display: inline-block;
         height: 100%;
-        font-family:Noe; font-size:1.5vw; 
+        font-family:Noe; 
+        font-size: 2em; 
         color:white
     
     }
@@ -79,7 +78,7 @@
         position:absolute;
         /*pointer-events:none;*/
         transition: opacity 0.5s;
-        background: rgba(255,255,255,0.75);
+        background: rgba(255,255,255,0.85);
     } 
 
 
@@ -111,7 +110,7 @@
 
     /*graph styling*/
     
-    #chartTitle {
+/*    #chartTitle {
         text-align: center;
         margin-top: 5%;
         position: absolute;
@@ -119,15 +118,32 @@
         font-size:1.5vw;
         color:#666;
     }
-
+*/
 
     #actualChart {
         opacity:0;
+    }
+
+    #xScale {
         transition: all 1s;
         transform-origin: bottom left;
         transform: scaleX(2.5);
+        height:100%;
+    }
+    .increment {
+        position: absolute;
+        border-bottom: 2px dotted #ccc;
+        width: 100%;
+        height: 100%;
+        transition: all 1s;
     }
 
+    .increment:after {
+        content: attr(value);
+        color:#999;
+        line-height: 60em;
+        font-size:1.5em;
+    }
     .year {
         width: 20%;
         margin-left: 5%;
@@ -162,6 +178,7 @@
 
     .exploded .subBar {
         transform: scaleX(1.25);
+        transform-origin: bottom left;
     }
     .exploded #year0 .shortHaul {
         transform:translateX(160%) scaleX(1.25);
@@ -171,9 +188,6 @@
         transform:translateX(320%) scaleX(1.25);
     }
 
-    .exploded .subBar {
-        /*transform:scaleX(0.8);*/
-    }
     .chart {
         transition: opacity 1s;
     }
@@ -214,7 +228,7 @@
     #years {
         opacity:0;
         transition: transform 1s;
-        transform-origin:left;
+        transform-origin:top left;
     }
 
     .bar {
@@ -277,6 +291,7 @@
         color:#999;
         opacity:0;
         transition: all 1s;
+        transform-origin:top center;
     }
 
     #journeyGraphics img {
@@ -298,8 +313,8 @@
     }
 
     #sidebar {
-        width: 40%;
-        left: 60%;
+        width: 100%;
+        left: 0%;
         overflow-y: scroll;
         font-size:calc(1vh + 1vw);
         position:absolute;
@@ -308,11 +323,11 @@
     }
 
     #content {
-        background-color: #fafafa;
         color: #666;
         height:100%;
         width:40%;
         position:fixed;
+        left:60%;
     }
 
     .nav {
@@ -352,11 +367,14 @@
         width: 25%;
         border-radius: 50%;
         border:1px solid #ddd;
+        margin-bottom: 10px;
     }
 
     #drawer {
-        /*position:absolute;*/
-        height:100%;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        pointer-events: none
     }
 
     .blue {
@@ -375,10 +393,11 @@
         font-style: italic;
     }
     section {
-        /*margin: 0% 15%;*/
-        outline: 2px solid rgba(6,73,121,0.1);
+        /*background-color: #fafafa;*/
+        outline: 1px solid rgba(6,73,121,0.1);
         height:100%;
-        width:100%;
+        width:40%;
+        left:60%;
         position:relative;
     }
 
@@ -436,19 +455,24 @@
         
         .axisMax {
             font-size:1em;
-            border-bottom:4px dotted #ccc;
+        border-bottom: 6px dotted #ccc;
         }
+
+
         .axisLabel {
             width:27vh;
             font-size:5vw;
             margin-left:-3vw;
         }
         
-
         .label {
             font-size:3vw;
         }
 
+        .increment:after {
+            line-height: 24em;
+            font-size:0.8em;
+        }
         #types .rotator {
             transform:translateX(-30%) translateY(60%) rotate(-40deg);
             text-align:right;
@@ -470,8 +494,13 @@
 
         #content {
             width: 100%;
+            left:0;
         }
 
+        section {
+            width:100%;
+            left:0;
+        }
         #container {
             padding: 0% 5%;
         }
@@ -505,6 +534,7 @@
     </div>
     <div id='drawer'></div>
 </div>
+
 <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoicGV0ZXJxbGl1IiwiYSI6ImNqdHJqdG92OTBkNTg0M3BsNDY0d3NudWcifQ.0z4ov_viFE-yBMSijQpOhQ';
 

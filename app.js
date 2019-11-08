@@ -6,6 +6,7 @@ var state = {
 
 var vis = {
 
+	// set visibility of overlay layers WITHIN MAP
 	setOverlay: function(layerToShow){
 
 		var overlays = [
@@ -23,7 +24,6 @@ var vis = {
 		]
 
 		if (typeof layerToShow ==='object') {
-			console.log('is array')
 			for (overlay of overlays) {
 				map.setPaintProperty(
 					overlay, 
@@ -44,17 +44,23 @@ var vis = {
 		}
 	},
 
-	highlightDriver(driverLayer) {
-		var layerList = Object.keys(drivers).map(d=>drivers[d].layer);
+	// highlightDriver(driverLayer) {
 
-		for (layer of layerList) {
-				map.setPaintProperty(
-					layer, 
-					layer === 'dallas' ? 'circle-color' : 'line-color', 
-					layer === driverLayer ? '#f09e05' : '#064979'
-				)			
-		}
-	},
+	// 	// if driverLayer not specified, show all driver routes
+	// 	var inactiveColor = driverLayer ? 'rgba(255,255,255,0)' : '#f09e05';
+	// 	var layerList = Object.keys(drivers)
+	// 		.map(d=>drivers[d].layer);
+
+	// 	for (layer of layerList) {
+	// 			map.setPaintProperty(
+	// 				layer, 
+	// 				layer === 'dallas' ? 'circle-color' : 'line-color', 
+	// 				layer === driverLayer ? '#f09e05' : inactiveColor
+	// 			)			
+	// 	}
+	// },
+
+	// set visibility of main elements
 
 	setSectionOpacity: function(section){
 
@@ -72,6 +78,8 @@ var vis = {
 		}
 	},
 
+	// set visibility of images within journeyGraphic
+
 	setJourneyGraphic: function(step){
 
 		d3.selectAll('#journeyGraphics img')
@@ -81,6 +89,8 @@ var vis = {
 	styleWithScroll: function(maxValue, progress, maxProgress) {
 		return Math.min(progress/maxProgress, 1) * maxValue
 	},
+
+	// set visibility of explainer/actual charts
 
 	toggleChartVisibility: function(chart){
 		var charts = ['#explainer .bar', '#actualChart'];
@@ -94,14 +104,28 @@ var vis = {
 	//toggle between steps (years) in actual chart
 	setChart: function(step, exploded) {
 
+		var currentMax = chartData[step-1].max;
 		// update title
 
 		// d3.select('#chartTitle')
 		// 	.text(d=> `${chartData[step-1].area} by ${chartData[step-1].year}`)
 
-		//update whole chart transform to fit on graph
+
 		d3.select('#actualChart')
+			.classed('exploded', exploded)
+
+		//update whole chart transform to fit on graph
+		d3.select('#xScale')
 			.style('transform', `scaleX(${exploded ? 2.5 : 4/step}) translateY(-1px)`);
+
+
+		d3.selectAll('.increment')
+			.style('opacity', (d,i)=>{
+				return d.year === chartData[step-1].year ? 1 : 0
+			})
+			.style('transform', (d)=>{
+				return `translateY(${-100 * d.value/currentMax}%`
+			})
 
 		// fade in/out appropriate year (capped at 90% height)
 		d3.selectAll('.year')
@@ -109,17 +133,22 @@ var vis = {
 				return i < step
 			})
 			.style('transform', (d,i)=>{
-				return `scaleY(${0.9 * d.max/chartData[step-1].max}) ${exploded ? 'translateX(-30%)' : ''}`
+				return `scaleY(${0.9 * d.max/currentMax}) ${exploded ? 'translateX(-30%)' : ''}`
 			})
 
 
-		// set max number
-		d3.select('.axisMax')
-			.text(chartData[step-1].max.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
+		// // set max number
+		// d3.select('.axisMax')
+		// 	.text(chartData[step-1].max.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
+
+		// update labels
 		if (step >=2) {
 
 			d3.select('#years')
 				.style('transform', `scale(${4/step})`)
+				.selectAll('.label')
+				.style('transform', `scale(${step/4})`)
+
 		}
 	},
 
@@ -136,17 +165,16 @@ var vis = {
 			.style('opacity', (d,i)=>{return blocking.label[i].opacity})	
 			.style('transform', (d,i)=>{return blocking.label[i].transform});	
 
-		
-
 	},
 
-
+	// generic toggler
 	toggle: function(type, targetToActivate) {
 		var candidates = this.toggles[type];
 
 		for (candidate of candidates) {
 			d3.selectAll(candidate)
 				.style('opacity', candidate === targetToActivate ? 1 : 0)
+				.classed('active', candidate === targetToActivate)
 		}
 	},
 	toggles: {
@@ -297,7 +325,6 @@ map.on('load', ()=>{
 		.on('click', (d)=>{
 			document.querySelector('#sidebar')
 				.scrollTo(0,document.querySelector('#sidebar').offsetHeight * d.page)
-				console.log(d)
 			d.do();
 		})
 
@@ -378,39 +405,60 @@ animation.buildFrames();
 
 
 
-function buildProfiles(name) {
+function buildProfiles(name, page) {
 
+	var labels= ['', 'Age: ', 'Favorite haul: '];
 
 	d3.select('#container')
 		.insert('img', ':first-child')
 		.attr('class', 'driverMug')
 		.attr('src', `./assets/driver-${name}.jpg`)
 
-	d3.select('#container')
-		.append('p')
-		.selectAll('span')
-		.data(drivers[name].blurb)
-		.enter()
-		.append('span')
-		.style('display', 'block')
-		.text(d=>d)
 
-	d3.select('#container')
-		.append('p')
-		.append('span')
-		.text(drivers[name].quote)
-		.attr('class', 'quote blue')
+	if (page === 1){
 
-	// d3.select('#container')
-	// 	.append('p')
-	// 	.selectAll('span')
-	// 	.data([`How does ${name}'s job change?`, drivers[name].change])
-	// 	.enter()
-	// 	.append('span')
-	// 	.text(d=>d)
-	// 	.attr('class', (d,i)=>{return i === 0 ? 'blue bold' : 0})
+		d3.select('#container')
+			.append('div')
+			.attr('class', 'bold header blue')
+			.text(d=>`${name}, ${ drivers[name].blurb[0]}`)
 
-	vis.highlightDriver(drivers[name].layer)
+		d3.select('#container')
+			.append('p')
+			.selectAll('span')
+			.data(drivers[name].blurb)
+			.enter()
+			.append('span')
+			.style('display', 'block')
+			.html((d,i)=>{ return i===0 ? ``: `<b>${labels[i]}</b> ${d}`})
+
+		d3.select('#container')
+			.append('p')
+			.append('span')
+			.text(drivers[name].quote)
+			.attr('class', 'quote blue')
+	}
+
+	else {
+
+		d3.select('#container')
+			.append('div')
+			.attr('class', 'header blue bold')
+			.text(`How does ${name}'s job change?`)
+
+		d3.select('#container')
+			.append('p')
+			.text(drivers[name].change)
+
+		d3.select('#container')
+			.append('a')
+			.text('Learn more >')
+			.attr('class', 'blue')
+			.attr('href', drivers[name].readMore)
+	}
+
+
+	// vis.highlightDriver(drivers[name].layer)
+	vis.setOverlay(drivers[name].layer)
 }
 
 function buildExplainer(data){
@@ -421,9 +469,9 @@ function buildExplainer(data){
 		.attr('class','barSpace chart')
 		.attr('id', 'explainer')
 
-	chart
-		.append('div')
-		.attr('class', 'axisMax')
+	// chart
+	// 	.append('div')
+	// 	.attr('class', 'axisMax')
 
 	chart
 		.append('div')
@@ -474,6 +522,7 @@ function buildExplainer(data){
 		.text(d=>d)
 
 
+	var captionSet = 
 	d3.select('#captions')
 		.append('div')
 		.attr('id', 'years')
@@ -486,8 +535,16 @@ function buildExplainer(data){
 		.style('margin-left',(d,i)=>{
 			return `${7+25*i}%`
 		})
-		.style('opacity', 1)
+		.style('opacity', 1);
+
+	captionSet
+		.append('div')
 		.text(d=>d.year)
+
+	captionSet
+		.append('div')
+		.text(d=>d.area)
+		.style('color',"rgba(6,73,121,0.5)")
 }
 
 buildExplainer([
@@ -504,8 +561,8 @@ function buildChart(){
 		var y = year.data[1];
 		year.max = y[0] + y[1] + y[2]
 	};
-	// actual chart
 
+	// actual chart
 
 	var actualChart = d3.select('#chart')
 		.append('div')
@@ -514,9 +571,36 @@ function buildChart(){
 		// .style('transform', 'translateX(100%)')
 
 
+	// add increments
+
+	actualChart
+		.append('div')
+		.attr('id', 'increments')
+		.selectAll('.increment')
+		.data(()=>{
+			var values = [];
+
+			for (year of chartData) {
+				var increment = year.chartIncrement;
+				for (var i = 1; i*increment < year.max + 0; i++) {
+					values.push({value:i*increment, year: year.year})
+				}
+			}
+
+			return values
+		})
+		.enter()
+		.append('div')
+		.attr('class', 'increment')
+		.attr('year', d=>d.year)
+		.attr('value', d=>d.value/1000+'k')
+
 	// add one div per year
 	var year = actualChart
+		.append('div')
+		.attr('id', 'xScale')
 		.selectAll('.year')
+		.append('div')
 		.data(chartData, d=>d)
 		.enter()
 		.append('div')
@@ -567,12 +651,12 @@ function buildChart(){
 
 	// axes
 
-	svg.append('line')
-		.attr('x1', '0%')
-		.attr('y1', '100%')
-		.attr('x2', '0%')
-		.attr('y2', '0%')
-		.attr('class', 'axis')
+	// svg.append('line')
+	// 	.attr('x1', '0%')
+	// 	.attr('y1', '100%')
+	// 	.attr('x2', '0%')
+	// 	.attr('y2', '0%')
+	// 	.attr('class', 'axis')
 
 	svg.append('line')
 		.attr('x1', '0%')
@@ -583,7 +667,6 @@ function buildChart(){
 }
 
 buildChart();
-// vis.setChart(1)
 
 function scrollTo(scrollTop){
 
@@ -598,14 +681,17 @@ function scrollTo(scrollTop){
 		populateSidebar(newSlide)
 		notFoundYet = true;
 
-
-
+		// update navigation ui
 		d3.selectAll('.nav div')
 			.style('opacity', (d,i)=>{
 				var active = newSlide >= d.page && (!navLinks[i+1] || newSlide < navLinks[i+1].page)
 				return active ? 1: ''
 			})
 			.classed('bold', (d,i)=>{return newSlide >= d.page && (!navLinks[i+1] || newSlide < navLinks[i+1].page)})
+	
+		//hide chevron on last page
+		d3.select('#chevron')
+			.style('display', newSlide == tasks.length-1 ? 'none' : 'block')
 	}
 
 	if (state.currentSlide>=0) tasks[newSlide].do(rawProgress%1, entering, rewinding);
@@ -634,7 +720,7 @@ function populateSidebar(newSlide){
 	.enter()
 	.append('p')
 	// .style('font-size', slide.textSize || '1em')
-	.text(d=>d)
+	.html(d=>d)
 	.attr('class', (d,i)=>{return 'regular p'+i});
 
 	if (tasks[state.currentSlide].progressiveText) {
