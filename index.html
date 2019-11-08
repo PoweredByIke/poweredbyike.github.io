@@ -328,8 +328,12 @@
         width:40%;
         position:fixed;
         left:60%;
+        pointer-events: none
     }
 
+    #content a {
+        pointer-events: all
+    }
     .nav {
         width: 40%;
         text-transform:uppercase;
@@ -375,7 +379,7 @@
         height: 100%;
         width: 100%;
         pointer-events: none
-
+        -webkit-overflow-scrolling: touch;
     }
 
     .blue {
@@ -529,11 +533,11 @@
     <div id='journeyGraphics' style='pointer-events: none; background:white'></div>
 </div>
 <div id='sidebar'>
+    <div id='drawer'></div>
     <div id='content'>
         <div id='container'></div>
         <div id='chevron' class='blue'></div>
     </div>
-    <div id='drawer'></div>
 </div>
 
 <script>
