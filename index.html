@@ -16,10 +16,11 @@
 
 <style>
 
-        @font-face {
-            font-family:Noe;
-            src:url("./assets/Noe Display Bold.otf")
-        }
+    @font-face {
+        font-family:Noe;
+        src:url("./assets/Noe Display Bold.otf")
+    }
+
     body, html {
         height:100%;
         margin:0;
@@ -27,6 +28,8 @@
         background: #fafafa;
         overflow:hidden;
         font-family: 'Source Sans Pro', sans-serif;
+        position:fixed;
+        width:100%;
     }
 
     #headerBar {
@@ -141,7 +144,7 @@
     .increment:after {
         content: attr(value);
         color:#999;
-        line-height: 41em;
+        line-height: 59em;
         font-size:1.5em;
     }
     .year {
@@ -301,15 +304,6 @@
         position: absolute;
         opacity:0;
         transition:opacity 0.5s;
-/*        
-        width:100%;
-        max-width:1000px;
-        position: absolute;
-        opacity:0;
-        transition:opacity 0.5s;
-        max-width: 1000px;
-        transform: translateX(-50%);
-        left: 50%;*/
     }
 
     #sidebar {
@@ -332,7 +326,7 @@
     }
 
     #content a {
-        pointer-events: all
+        pointer-events: all;
     }
     .nav {
         width: 40%;
