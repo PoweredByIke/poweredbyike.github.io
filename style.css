@@ -1,20 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset='utf-8' />
-    <title>The job impacts of automated trucks</title>
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
-    <script src="https://d3js.org/d3.v4.min.js"></script>
-    <script src="./content.js"></script>
-
-</head>
-<body>
-
-
-<style>
 
     @font-face {
         font-family:Noe;
@@ -527,39 +510,3 @@
         }
 
     }
-</style>
-<div id='headerBar'>
-    <img src='assets/logo.png' id='logo'>
-            <div id='mainTitle'>The job impact of automated trucks</div>
-
-</div>
-<div id='map'>
-    <div id='chart'>
-        <!-- <div id='chartTitle'>Effects of Automation</div> -->
-        <div id = 'captions'></div>
-    </div>
-    <div id='journeyGraphics' style='pointer-events: none; background:white'></div>
-</div>
-<div id='sidebar'>
-    <div id='drawer'></div>
-    <div id='content'>
-        <div id='container'></div>
-        <div id='chevron' class='blue'></div>
-    </div>
-</div>
-
-<script>
-    mapboxgl.accessToken = 'pk.eyJ1IjoicGV0ZXJxbGl1IiwiYSI6ImNqdHJqdG92OTBkNTg0M3BsNDY0d3NudWcifQ.0z4ov_viFE-yBMSijQpOhQ';
-
-    var map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/peterqliu/ck2gsk41605p71coi7wf6dope',
-        scrollZoom: false,
-        // dragPan: false
-    });
-
-
-</script>
-<script src='app.js'></script>
-</body>
-</html>

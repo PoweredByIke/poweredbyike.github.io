@@ -677,7 +677,6 @@ function scrollTo(scrollTop){
 
 	state.scrollPosition = scrollTop;
 	var rawProgress = state.scrollPosition/document.querySelector('#sidebar').offsetHeight;
-	console.log(document.querySelector('#sidebar').offsetHeight)
 	var newSlide = Math.floor(rawProgress);
 	var entering = state.currentSlide !== newSlide;
 	var rewinding = entering && state.currentSlide > newSlide;
