@@ -359,7 +359,7 @@ var tasks = [
 		"header": "Real driver stories",
 		"text":[
 			"At Ike, we’re focused on building technology that helps people. That means we have to understand truckers and make sure our product doesn’t leave them behind.",
-			"The trucking industry is complex, and there ane many kinds of driving jobs. Some truckers will see their roles change with automation, and some won’t.",
+			"The trucking industry is complex, and there are many kinds of driving jobs. Some truckers will see their roles change with automation, and some won’t.",
 			"Let’s meet a few truckers with very different roles, and explore how their jobs may change in the future."
 		],
 
