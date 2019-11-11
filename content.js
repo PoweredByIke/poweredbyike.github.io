@@ -359,7 +359,7 @@ var tasks = [
 		"header": "Real driver stories",
 		"text":[
 			"At Ike, we’re focused on building technology that helps people. That means we have to understand truckers and make sure our product doesn’t leave them behind.",
-			"The trucking industry is complex, and there ane many kinds of driving jobs. Some truckers will see their roles change with automation, and some won’t.",
+			"The trucking industry is complex, and there are many kinds of driving jobs. Some truckers will see their roles change with automation, and some won’t.",
 			"Let’s meet a few truckers with very different roles, and explore how their jobs may change in the future."
 		],
 
@@ -492,7 +492,7 @@ var drivers = {
 			'31',
 			'food for a church'
 		],
-		readMore: 'https://medium.com/ike-robotics/truck-driver-stories-charles-over-the-road-driver-42815416f02a',
+		readMore: 'https://www.medium.com/ike-robotics/truck-driver-stories-charles-over-the-road-driver-42815416f02a',
 		layer: 'midwest',
 		quote: '“The hardest part is being away from your family, not getting that regular routine of working a 9 to 5. If I want to go out with my friends, that lifestyle is put aside for the permanent lifestyle of being a professional driver.”',
 		change:'In the future, Charles may have more opportunities to work 9 to 5 and stay close to family and friends. His role may shift to local driving, handing off loads to automated trucks for the long haul.'
@@ -504,7 +504,7 @@ var drivers = {
 			'58',
 			'horses'
 		],
-		readMore: 'https://medium.com/ike-robotics/truck-driver-stories-don-local-driver-5e6880576433',
+		readMore: 'https://www.medium.com/ike-robotics/truck-driver-stories-don-local-driver-5e6880576433',
 		layer: 'st. louis',
 		quote: '“I would never go over the road ever again. I sacrificed time and place for money, which is what truckers do. They sacrifice so much. It is a tough job. Mentally, emotionally, it is so tough.”',
 		change:"It doesn’t. Instead, many over the road drivers may shift to roles like Don’s, and he’ll have a lot more volume of freight available for local driving, with automated trucks sticking to the highways."
@@ -516,7 +516,7 @@ var drivers = {
 			'60',
 			'an antique Russian tank'
 		],
-		readMore: 'https://medium.com/ike-robotics/truck-driver-stories-steve-owner-operator-6a8246bcd10b',
+		readMore: 'https://www.medium.com/ike-robotics/truck-driver-stories-steve-owner-operator-6a8246bcd10b',
 		layer: 'southeast',
 		quote: '“I like to stay out for four or five weeks and then take three weeks off. Some truckers will ask me how can you be gone that long, and I say to them, how can you work 52 weeks straight?”',
 		change:'It doesn’t. Experienced operators like Steve will be hauling specialized freight for a long time to come. Some day automated trucks may be able to do this work, but Steve will be long retired.'
@@ -528,7 +528,7 @@ var drivers = {
 			'44',
 			'ice cream'
 		],
-		readMore: 'https://medium.com/ike-robotics/truck-driver-stories-Tiffanyany-small-fleet-owner-af151c00d97',
+		readMore: 'https://www.medium.com/ike-robotics/truck-driver-stories-Tiffanyany-small-fleet-owner-af151c00d97',
 		layer: 'dallas',
 		quote: '“I enjoy being able to take care of my drivers. When I was first starting out, I was earning like $400 a week and barely making it. Now I want to make sure to pay my drivers a decent salary so that they can make a living and also be able to enjoy life.”',
 		change:'Tiffany may add automated trucks to her small fleet, and use her drivers to handle the routes to and from the highway. She may find it easier to hire and retain drivers by helping them stay local.'
@@ -540,7 +540,7 @@ var drivers = {
 			'56',
 			'sailboats'
 		],
-		readMore: 'https://medium.com/ike-robotics/truck-driver-stories-tommy-automated-vehicle-operator-6eb025fc3b39',
+		readMore: 'https://www.medium.com/ike-robotics/truck-driver-stories-tommy-automated-vehicle-operator-6eb025fc3b39',
 		layer: 'california',
 		quote: '“I used to be very skeptical of this automation stuff. Then I started looking into it more and I was reassured. The long hauls might be automated but there’s no way you’re going to have robots driving hazardous loads and local routes.”',
 		change:'It doesn’t. Even when automated trucks are driving throughout the country, AVOs like Tommy will be needed to help test and improve new versions of the technology.'

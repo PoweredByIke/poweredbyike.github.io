@@ -458,6 +458,7 @@ function buildProfiles(name, page) {
 			.text(`Learn more about ${name}`)
 			.attr('class', 'blue')
 			.attr('href', drivers[name].readMore)
+			.attr('target', '_blank')
 	}
 
 
