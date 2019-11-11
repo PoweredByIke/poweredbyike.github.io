@@ -91,7 +91,7 @@ var tasks = [
 
 	{
 		"text":[
-			"In industrial yards, they navigate a very dynamic environment, back up to the dock, attach air hoses, open and close doors, and talk to people."
+			"In industrial yards, they navigate a very dynamic environment, back up to the dock, attach air hoses, open and close doors, perform inspections, and talk to people."
 		],
 		do: function(progress, entering){
 
@@ -120,7 +120,7 @@ var tasks = [
 
 
 	{
-		"text":["In the future, trucks powered by Ike’s technology will navigate the highway without a driver, handing off loads to truckers for the more complex and valuable part of the journey on either end."],
+		"text":["In the future, trucks powered by Ike’s technology will navigate the highway without a driver, handing off loads to truckers for the more complex part of the journey on either end."],
 		do: function(progress, entering){
 			if (entering) vis.setJourneyGraphic(5)
 		}
@@ -142,7 +142,7 @@ var tasks = [
 	},
 
 	{
-		"text":["But how many jobs, and what’s the impact over time? Ike has worked with economist Dr. Charles Hodgson to explore the impact of automated trucks with our highway focused model on truck driving jobs."],
+		"text":["But how many jobs, and what’s the impact over time? Ike worked with economist Dr. Charles Hodgson to explore the impact of automated trucks with our highway focused model on truck driving jobs."],
 		do: function(progress, entering){
 			if (entering) {
 
@@ -340,7 +340,7 @@ var tasks = [
 	{
 		"text":[
 
-			"Ten years from now, automated trucks will be hauling loads all across the country.",
+			"Ten years from now, automated trucks will begin hauling loads all across the country.",
 			"This analysis tells us that many long haul truck driving jobs will shift to short haul. While that may not offset all the loss in jobs, it will mean more opportunities for truckers to sleep in their own beds at night and do the work that is hard to automate.", 
 			"Let’s go deeper on how this model might impact real drivers.",
 		],
@@ -359,7 +359,7 @@ var tasks = [
 		"header": "Real driver stories",
 		"text":[
 			"At Ike, we’re focused on building technology that helps people. That means we have to understand truckers and make sure our product doesn’t leave them behind.",
-			"The trucking industry is complex, and there any many kinds of driving jobs. Some truckers will see their roles change with automation, and some won’t.",
+			"The trucking industry is complex, and there ane many kinds of driving jobs. Some truckers will see their roles change with automation, and some won’t.",
 			"Let’s meet a few truckers with very different roles, and explore how their jobs may change in the future."
 		],
 
@@ -447,10 +447,9 @@ var tasks = [
 	},
 	{
 		"text":[
-			"Ike has open sourced this analysis under the MIT license. You can explore the full code and data on GitHub. The model is built on top of one developed by Uber, and open sourced in 2018.",
+			"Ike has <a href='https://github.com/PoweredByIke/labor-impact'>open sourced</a> this analysis under the MIT license. You can explore the full code and data on GitHub. The model is built on top of one developed by Uber, and <a href='https://github.com/uber/trucking-labor-analysis'>open sourced in 2018</a>.",
 			"Comments and feedback are welcome at labor@ikerobotics.com.",
-			"We are hiring CDL drivers.",
-			"Thanks to Charles Hodgson, Peter Liu, Iris Gottlieb (illustrations), Anna Carollo, Steve Viscelli, and many others for contributions and input on this work."
+			"Thanks to Charles Hodgson, Peter Liu, Iris Gottlieb (illustrations), Anna Carollo, Steve Viscelli, Tim Sinnott, and many others for contributions and input on this work."
 		],
 		textSize: '0.75em',
 		do: function(progress, entering){
@@ -532,7 +531,7 @@ var drivers = {
 		readMore: 'https://medium.com/ike-robotics/truck-driver-stories-Tiffanyany-small-fleet-owner-af151c00d97',
 		layer: 'dallas',
 		quote: '“I enjoy being able to take care of my drivers. When I was first starting out, I was earning like $400 a week and barely making it. Now I want to make sure to pay my drivers a decent salary so that they can make a living and also be able to enjoy life.”',
-		change:'Tiffany may add automated trucks to her small fleet, and use her drivers to handle to and from the highway. She may find it easier to hire and retain drivers by helping them stay local.'
+		change:'Tiffany may add automated trucks to her small fleet, and use her drivers to handle the routes to and from the highway. She may find it easier to hire and retain drivers by helping them stay local.'
 	},
 
 	Tommy: {

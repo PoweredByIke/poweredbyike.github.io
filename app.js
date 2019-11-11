@@ -209,13 +209,13 @@ var vis = {
 					{transform:'scaleY(1)'},
 					{transform:''},
 					{transform:''},
-					{transform:'translate(-12vw, 80%) scaleY(0)'}
+					{transform:'translate(-120%, 80%) scaleY(0)'}
 				],
 				label: [
 					{opacity:1},
 					{opacity:0},
 					{opacity:0},
-					{opacity:0, transform: 'translate(-12vw, 0vh)'}
+					{opacity:0, transform: 'translate(-120%, 0vh)'}
 				]
 			},
 
@@ -225,13 +225,13 @@ var vis = {
 					{transform:'scaleY(1)'},
 					{transform:'scaleY(1)'},
 					{transform:''},
-					{transform: 'translate(-12vw, 80%) scaleY(1) '}
+					{transform: 'translate(-120%, 80%) scaleY(1) '}
 				],
 				label: [
 					{opacity:1},
 					{opacity:1},
 					{opacity:0},
-					{opacity:1, transform: 'translate(-12vw, 0vh)'}
+					{opacity:1, transform: 'translate(-120%, 0vh)'}
 				]
 			},
 
@@ -241,7 +241,7 @@ var vis = {
 					{transform:'scaleY(1)'},
 					{transform:'scaleY(1)'},
 					{transform:''},
-					{transform: 'translate(0vw, 80%) scaleY(1) '}
+					{transform: 'translate(0%, 80%) scaleY(1) '}
 				],
 				label: [
 					{opacity:1},
@@ -284,7 +284,9 @@ map.on('load', ()=>{
 				lineMetrics: true
 			},		
 			paint: {
-				'line-width': 2,
+				'line-width': {
+					stops:[[0,1], [12,6]]
+				},
 				'line-color': '#2e4545',
 				'line-opacity': 0.25
 			}
@@ -308,7 +310,9 @@ map.on('load', ()=>{
 			filter: ['!in', 'SIGN1', 'I5', 'I90', 'I40', 'I81', 'I29', 'I25', 'I94', 'I20'],
 			source:'interstate',		
 			paint: {
-				'line-width':4,
+				'line-width':{
+					stops:[[0,2], [12,6]]
+				},
 				'line-color':'rgba(0,0,0,0)'
 			}
 		})
@@ -451,7 +455,7 @@ function buildProfiles(name, page) {
 
 		d3.select('#container')
 			.append('a')
-			.text('Learn more >')
+			.text(`Learn more about ${name}`)
 			.attr('class', 'blue')
 			.attr('href', drivers[name].readMore)
 	}
@@ -672,6 +676,7 @@ function scrollTo(scrollTop){
 
 	state.scrollPosition = scrollTop;
 	var rawProgress = state.scrollPosition/document.querySelector('#sidebar').offsetHeight;
+	console.log(document.querySelector('#sidebar').offsetHeight)
 	var newSlide = Math.floor(rawProgress);
 	var entering = state.currentSlide !== newSlide;
 	var rewinding = entering && state.currentSlide > newSlide;

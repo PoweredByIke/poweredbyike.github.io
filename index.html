@@ -144,8 +144,9 @@
     .increment:after {
         content: attr(value);
         color:#999;
-        line-height: 59em;
         font-size:1.5em;
+        position:absolute;
+        bottom:0;
     }
     .year {
         width: 20%;
@@ -280,7 +281,7 @@
     .axisLabel {
         transform: translateX(-50%) rotate(-90deg);
         width: 60vh;
-        margin-left:-2vw;
+        margin-left:-5%;
         font-size:1.5vw;
         color:#999;
     }
@@ -440,6 +441,11 @@
             height:60px;
         }
 
+        #map {
+            top:60px;
+            width:100%;
+            bottom:50%;
+        }
 
         #mainTitle{
             font-size:4.5vw;
@@ -460,7 +466,7 @@
 
         .axisLabel {
             width:27vh;
-            font-size:5vw;
+            font-size:4vw;
             margin-left:-3vw;
         }
         
@@ -469,23 +475,29 @@
         }
 
         .increment:after {
-            line-height: 24em;
-            font-size:0.8em;
+            font-size:0.75em;
         }
-        #types .rotator {
-            transform:translateX(-30%) translateY(60%) rotate(-40deg);
+        .rotator {
+            transform:translateX(-20%) translateY(60%) rotate(-40deg);
             text-align:right;
         }
-        #map {
-            top:60px;
-            width:100%;
-            bottom:50%;
+
+
+        /* give a bit more chart space */
+
+        #chart svg, .barSpace {
+            top:0;
+            height:65%;
+        }
+
+        #captions {
+            top:75%;
         }
 
         #sidebar {
             width:100%;
             bottom:0;
-            top:50%;
+            height:100%;
             position:absolute;
             left:0;
             font-size: 2.5vh;
@@ -494,6 +506,7 @@
         #content {
             width: 100%;
             left:0;
+            top:50%;
         }
 
         section {
