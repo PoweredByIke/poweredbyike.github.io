@@ -481,7 +481,7 @@ function buildExplainer(data){
 	chart
 		.append('div')
 		.attr('class', 'axisLabel')
-		.text('Jobs')
+		.text('Jobs / Automated trucks')
 
 
 	// bars
@@ -510,10 +510,10 @@ function buildExplainer(data){
 		.attr('id', 'types')
 		.selectAll('.label')
 		.data([
-			'Without automation', 
-			'With automation', 
+			'Baseline jobs without automation', 
+			'Baseline jobs with automation', 
 			'New short haul jobs', 
-			'Automated trucks'
+			'Number of automated trucks'
 		])
 		.enter()
 		.append('div')
