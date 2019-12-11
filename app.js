@@ -133,13 +133,9 @@ var vis = {
 				return i < step
 			})
 			.style('transform', (d,i)=>{
-				return `scaleY(${0.9 * d.max/currentMax}) ${exploded ? 'translateX(-30%)' : ''}`
+				return `scaleY(${d.max/currentMax}) ${exploded ? 'translateX(-30%)' : ''}`
 			})
 
-
-		// // set max number
-		// d3.select('.axisMax')
-		// 	.text(chartData[step-1].max.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
 
 		// update labels
 		if (step >=2) {
@@ -724,11 +720,10 @@ function populateSidebar(newSlide){
 	.data(d => slide.text)
 	.enter()
 	.append('p')
-	// .style('font-size', slide.textSize || '1em')
 	.html(d=>d)
 	.attr('class', (d,i)=>{return 'regular p'+i});
 
-	if (tasks[state.currentSlide].progressiveText) {
+	if (slide.progressiveText) {
 		d3.selectAll('#container p')
 			.style('opacity', (d,i)=>{return i === 0 ? 1 : 0})
 	}	

@@ -36,7 +36,8 @@ var tasks = [
 	{
 		"header": "The freight landscape: today and tomorrow",
 		"text":[
-			"Every day, millions of tons of goods move across the United States on the interstate highway system in Class 8 tractor trailer trucks."
+			"Every day, millions of tons of goods move across the United States on the interstate highway system in Class 8 tractor trailer trucks.",
+			"Ike is working to automate the highway portion of long haul trucking in partnership with the industry. We think it’s possible to build automated trucking that creates better truck driving jobs, so more drivers can sleep in their own beds at night and use their skills and expertise where it matters most. This story map summarizes our analysis of the potential impacts of Ike's approach to automation over the next 10 years."
 		],
 		
 		do: function(progress, entering){
@@ -50,8 +51,6 @@ var tasks = [
 			if (entering) {
 				vis.setOverlay('us');
 				map.fitBounds(bounds.us, {duration:1000})
-				// map.easeTo({zoom:4})
-
 			}
 		}
 	},
@@ -100,7 +99,9 @@ var tasks = [
 	},
 
 	{
-		"text":["On surface streets, drivers navigate stop lights, watch out for pedestrians in crosswalks, and make tight turns with their articulated vehicles."],
+		"text":[
+			"On surface streets, drivers navigate stop lights, watch out for pedestrians in crosswalks, and make tight turns with their articulated vehicles."
+			],
 		do: function(progress, entering){
 			if (entering) vis.setJourneyGraphic(3)
 
@@ -128,8 +129,8 @@ var tasks = [
 
 	{
 		"text": [
-		"This approach simplifies the technical problem, automating the simplest and most monotonous part of the journey.",
-		" It also means more jobs for truckers that keep them closer to home, using their skills and expertise where it matters."
+			"This approach simplifies the technical problem, automating the simplest and most monotonous part of the journey.",
+			"It also means more jobs for truckers that keep them closer to home, using their skills and expertise where it matters most."
 		],
 
 		do: function(progress, entering){
@@ -447,7 +448,7 @@ var tasks = [
 	},
 	{
 		"text":[
-			"Ike has <a href='https://github.com/PoweredByIke/labor-impact'>open sourced</a> this analysis under the MIT license. You can explore the full code and data on GitHub. The model is built on top of one developed by Uber, and <a href='https://github.com/uber/trucking-labor-analysis'>open sourced in 2018</a>.",
+			"Ike has <a href='https://github.com/PoweredByIke/labor-impact' target='_blank'>open sourced</a> this analysis under the MIT license. You can explore the full code and data on GitHub. The model is built on top of one developed by Uber, and <a href='https://github.com/uber/trucking-labor-analysis' target='_blank'>open sourced in 2018</a>.",
 			"Comments and feedback are welcome at labor@ikerobotics.com.",
 			"Thanks to Charles Hodgson, Peter Liu, Iris Gottlieb (illustrations), Anna Carollo, Steve Viscelli, Tim Sinnott, and many others for contributions and input on this work."
 		],

@@ -372,10 +372,13 @@
         position: absolute;
         height: 100%;
         width: 100%;
-        pointer-events: none
-        -webkit-overflow-scrolling: touch;
+        /*pointer-events: none*/
+/*        -webkit-overflow-scrolling: touch;*/
     }
 
+    #drawer:active + #content{
+        pointer-events: all;
+    }
     .blue {
         color: #064979;
     }
@@ -466,8 +469,8 @@
 
         .axisLabel {
             width:27vh;
-            font-size:4vw;
-            margin-left:-3vw;
+            font-size: 3.5vw;
+            margin-left: -5vw;
             transform: translateX(-50%) rotate(-90deg) translateX(-30%);
         }
         
